@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" th:href="@{/style.css}"/>
+		<title>jNMS</title>
+		<script th:src="@{/uiSupport.js}"></script>
+	</head>
+	<body onload="onDocumentLoaded();">
+		<div id="header">jNMS</span>
+		
+		</div>
+		<div id="content">
+			<div id="sidebarContainer">
+				<ul id="entityMenu">
+					<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
+						<a th:href="@{/users}">
+							Users
+						</a>
+					</li>
+					<li th:each="entityRecord : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
+						<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}"
+							th:text="${entityRecord.value}">
+						</a>
+					</li>
+					<li>
+						<a th:href="@{/logout}">Sign Out</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div id="viewContainer">
+				<div th:if="${viewType == 'none'}"></div>
+				<div th:if="${viewType == 'grid'}">
+					<div th:replace="data-grid :: grid(columnNames=${columnNames}, columnValues=${columnValues}, entityClassName=${entityClassName})">
+					</div>
+				</div>
+				<div th:if="${viewType == 'entity'}">
+					<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
+					</div>
+				</div>
+				<div th:if="${viewType == 'userGrid'}">
+					<div th:replace="user-grid :: userGrid(users=${users})">
+					</div>
+				</div>
+				<div th:if="${viewType == 'userForm'}">
+					<div th:replace="user-view :: userForm(user=${user})">
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

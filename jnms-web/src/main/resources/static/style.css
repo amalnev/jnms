@@ -1,0 +1,44 @@
+#header {
+    height: 50px;
+    background-color: black;
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+#content {
+    display: block;
+}
+
+#sidebarContainer {
+    width: 20%;
+    float:left;
+}
+
+#entityMenu {
+    list-style-type: none;
+}
+
+#viewContainer {
+    float: right;
+    width: 80%;
+}
+
+.dataGrid {
+    width: 100%;
+    border: black 0.5px dashed;
+}
+
+.dataGrid td {
+    border: black 0.5px dashed;
+}
+
+.entityForm {
+    width: 100%;
+    border: none;
+}
+
+#errorBox {
+    color: red;
+}

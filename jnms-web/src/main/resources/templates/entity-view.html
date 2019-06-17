@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div th:fragment="entityForm(entity, springContext)">
+			<form action="#" th:action="@{/entity/save}" method="post">
+				<input type="hidden" th:name="entityClassName" th:value="${entity.getClass().getName()}"/>
+				<table class="entityForm">
+					<tbody>
+						<tr th:each="entityField : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayableFields(entity.getClass())}">
+							<td>
+								<span th:text="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayName(entityField)}">
+									FIELD NAME
+								</span>
+							</td>
+							<td>
+								<input type="text"
+									   th:value="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).runGetter(entityField, entity)}"
+									   th:if="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).isOrdinaryDataField(entityField)}"
+									   th:name="${entityField.getName()}"
+									   th:readonly="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).isDisabledField(entityField)}"
+								/>
+								
+								<span th:if="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).isOneToManyReference(entityField)}"
+									  th:text="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).runGetter(entityField, entity)}">
+								</span>
+								
+								<select th:if="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).isManyToOneReference(entityField)}"
+										th:name="${entityField.getName()}">
+									<option th:each="referencedEntity : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getRepositoryByEntityClass(springContext, entityField.getType()).findAll()}"
+											th:selected="${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).runGetter(entityField, entity) == null ? false : referencedEntity.getId().equals(T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).runGetter(entityField, entity).getId())}"
+											th:text="${referencedEntity.toString()}"
+											th:value="${referencedEntity.getId()}">
+									</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<input type="submit" value="Save"/>
+				<input type="button" value="Cancel"/>
+			</form>
+		</div>
+	</body>
+</html>

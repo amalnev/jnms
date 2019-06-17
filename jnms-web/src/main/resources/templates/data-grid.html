@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div th:fragment="grid(columnNames, columnValues, entityClassName)">
+			<table class="dataGrid">
+				<thead>
+					<tr>
+						<th th:each="columnName : ${columnNames}" th:text="${columnName}">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${columnValues.empty}">
+						<td colspan="2"> No items available</td>
+					</tr>
+					<tr th:each="record : ${columnValues}">
+						<td th:each="cellValue : ${record.value}">
+							<span th:text="${cellValue}"> Cell value</span>
+						<td>
+						<td>
+							<form action="#" th:action="@{/entity}" method="get">
+								<input type="hidden" th:name="entityClassName" th:value="${entityClassName}"/>
+								<input type="hidden" th:name="entityId" th:value="${record.key}"/>
+								<button type="submit">Edit</button>
+							</form>
+						</td>
+						<td>
+							<form action="#" th:action="@{/grid/delete}" method="get">
+								<input type="hidden" th:name="entityClassName" th:value="${entityClassName}"/>
+								<input type="hidden" th:name="entityId" th:value="${record.key}"/>
+								<button type="submit">Delete</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<form action="#" th:action="@{/entity}" method="get">
+				<input type="hidden" th:name="entityClassName" th:value="${entityClassName}"/>
+				<input type="hidden" th:name="entityId" th:value="-1"/>
+				<button type="submit">New</button>
+			</form>
+		</div>
+	</body>
+</html>
