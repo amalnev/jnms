@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 public @interface DisplayName
 {
     String value();
+
     boolean readonly() default false;
+
     int orderOfAppearance() default 100;
 }

@@ -1,10 +1,8 @@
 package ru.amalnev.jnmscommon.entities.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import ru.amalnev.jnmscommon.entities.DisplayName;
 import ru.amalnev.jnmscommon.entities.NamedEntity;
-import ru.amalnev.jnmscommon.repositories.EntityClass;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

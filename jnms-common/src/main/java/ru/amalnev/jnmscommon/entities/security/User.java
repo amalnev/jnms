@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.amalnev.jnmscommon.entities.AbstractEntity;
-import ru.amalnev.jnmscommon.entities.DisplayName;
 import ru.amalnev.jnmscommon.entities.MinPrivilege;
 
 import javax.persistence.*;

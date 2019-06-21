@@ -12,7 +12,9 @@ import ru.amalnev.jnmscommon.services.SecurityService;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,10 +27,10 @@ public class ReflectionUtils
 
     public static Class getEntityClass(final Object repositoryBean)
     {
-        for(final Class<?> interfaceClass : AopProxyUtils.proxiedUserInterfaces(repositoryBean))
+        for (final Class<?> interfaceClass : AopProxyUtils.proxiedUserInterfaces(repositoryBean))
         {
             final EntityClass entityClassAnnotation = interfaceClass.getAnnotation(EntityClass.class);
-            if(entityClassAnnotation != null) return entityClassAnnotation.value();
+            if (entityClassAnnotation != null) return entityClassAnnotation.value();
         }
 
         return null;
@@ -62,14 +64,16 @@ public class ReflectionUtils
             if (beanInstance instanceof CrudRepository)
             {
                 final Class<? extends AbstractEntity> entityClass = getEntityClass(beanInstance);
-                if(entityClass == null) continue;
+                if (entityClass == null) continue;
 
-                if(entityClass.isAnnotationPresent(DisplayName.class))
+                if (entityClass.isAnnotationPresent(DisplayName.class))
                 {
-                    final SecurityService securityService = (SecurityService) springContext.getBean(SecurityService.class);
-                    if(entityClass.isAnnotationPresent(MinPrivilege.class))
+                    final SecurityService securityService = (SecurityService) springContext.getBean(
+                            SecurityService.class);
+                    if (entityClass.isAnnotationPresent(MinPrivilege.class))
                     {
-                        if(securityService.getCurrentPrivilegeLevel() >= entityClass.getAnnotation(MinPrivilege.class).value())
+                        if (securityService.getCurrentPrivilegeLevel() >= entityClass.getAnnotation(
+                                MinPrivilege.class).value())
                         {
                             resultList.add(entityClass);
                         }
@@ -82,7 +86,8 @@ public class ReflectionUtils
             }
         }
 
-        Collections.sort(resultList, Comparator.comparingInt(cls -> cls.getAnnotation(DisplayName.class).orderOfAppearance()));
+        Collections.sort(resultList,
+                         Comparator.comparingInt(cls -> cls.getAnnotation(DisplayName.class).orderOfAppearance()));
         resultList.forEach(cls -> result.put(cls, cls.getAnnotation(DisplayName.class).value()));
 
         return result;
@@ -179,7 +184,7 @@ public class ReflectionUtils
 
     public static boolean isDisabledField(final Field field)
     {
-        if(isDisplayableField(field))
+        if (isDisplayableField(field))
         {
             DisplayName displayNameAnnotation = field.getAnnotation(DisplayName.class);
             return displayNameAnnotation.readonly();

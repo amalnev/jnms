@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.amalnev.jnmscommon.services.SecurityService;
@@ -20,10 +19,10 @@ import ru.amalnev.jnmscommon.services.SecurityService;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private SecurityService securityService;
 
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private PasswordEncoder passwordEncoder;
 
     @Bean
@@ -60,7 +59,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .clearAuthentication(true);
-
-
     }
 }

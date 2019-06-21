@@ -2,7 +2,6 @@ package ru.amalnev.jnmscommon.entities.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.amalnev.jnmscommon.entities.AbstractEntity;
 import ru.amalnev.jnmscommon.entities.DisplayName;
 import ru.amalnev.jnmscommon.entities.NamedEntity;
 

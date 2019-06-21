@@ -40,7 +40,7 @@ public class UserRole extends NamedEntity
     {
         final StringBuilder result = new StringBuilder();
         result.append(getName());
-        if(!description.isEmpty())
+        if (!description.isEmpty())
         {
             result.append(" (");
             result.append(description);

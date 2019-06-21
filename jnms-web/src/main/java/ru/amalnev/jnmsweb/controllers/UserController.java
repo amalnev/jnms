@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.amalnev.jnmscommon.entities.security.User;
-import ru.amalnev.jnmscommon.repositories.IUserRepository;
 import ru.amalnev.jnmscommon.services.SecurityService;
 import ru.amalnev.jnmsweb.constants.Constants;
 
@@ -19,7 +18,7 @@ public class UserController implements ApplicationContextAware
     @Setter
     private ApplicationContext applicationContext;
 
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private SecurityService securityService;
 
     @GetMapping

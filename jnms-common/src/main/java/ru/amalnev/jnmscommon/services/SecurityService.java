@@ -18,7 +18,6 @@ import ru.amalnev.jnmscommon.repositories.IUserRepository;
 import ru.amalnev.jnmscommon.repositories.IUserRoleRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -27,16 +26,16 @@ import java.util.function.Function;
 @Service
 public class SecurityService implements UserDetailsService
 {
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private IUserRepository userRepository;
 
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private IAuthorityRepository authorityRepository;
 
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private IUserRoleRepository roleRepository;
 
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     private PasswordEncoder passwordEncoder;
 
     @PostConstruct
@@ -49,7 +48,7 @@ public class SecurityService implements UserDetailsService
 
         //Если репозитории пустые - создаем начальных пользователей и назначаем им роли
         //для того чтобы инициализировать подсистему безопасности в работоспособное начальное состояние
-        if(users.size() == 0 && roles.size() == 0 && authorities.size() == 0)
+        if (users.size() == 0 && roles.size() == 0 && authorities.size() == 0)
         {
             final User root = new User("root", passwordEncoder.encode("root"));
             final UserRole rootRole = new UserRole("ROLE_ROOT", 15);
@@ -116,7 +115,7 @@ public class SecurityService implements UserDetailsService
                 .stream()
                 .max(Comparator.comparingInt(auth -> getPrivlegeByAuthority.apply((GrantedAuthority) auth)))
                 .orElse(null);
-        if(strongestAuthority != null) return getPrivlegeByAuthority.apply(strongestAuthority);
+        if (strongestAuthority != null) return getPrivlegeByAuthority.apply(strongestAuthority);
         return 0;
     }
 }
