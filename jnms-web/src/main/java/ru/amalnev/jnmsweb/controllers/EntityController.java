@@ -8,10 +8,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
-import org.springframework.validation.Validator;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import ru.amalnev.jnmscommon.entities.AbstractEntity;
 import ru.amalnev.jnmscommon.entities.DisplayName;
@@ -20,7 +17,9 @@ import ru.amalnev.jnmsweb.constants.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -49,11 +48,14 @@ public class EntityController implements ApplicationContextAware
         final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
 
-        final AbstractEntity entity = (AbstractEntity) repository.findById(entityId).orElse(entityClass.newInstance());
-        final List<String> fieldNames = ReflectionUtils.getFields(entity.getClass()).stream()
-                .filter(field -> field.isAnnotationPresent(DisplayName.class))
-                .map(field -> field.getName())
-                .collect(Collectors.toList());
+        final AbstractEntity entity = entityId != null ?
+                (AbstractEntity) repository.findById(entityId).orElse(entityClass.newInstance()) :
+                entityClass.newInstance();
+
+//        final List<String> fieldNames = ReflectionUtils.getFields(entity.getClass()).stream()
+//                .filter(field -> field.isAnnotationPresent(DisplayName.class))
+//                .map(field -> field.getName())
+//                .collect(Collectors.toList());
 
         uiModel.addAttribute("viewType", "entity");
         uiModel.addAttribute("entity", entity);
@@ -62,7 +64,6 @@ public class EntityController implements ApplicationContextAware
         return Constants.MAIN_VIEW;
     }
 
-    //TODO: Fix validation
     @PostMapping("/save")
     protected String save(final Model uiModel,
                           final HttpServletRequest request) throws Exception
@@ -82,7 +83,7 @@ public class EntityController implements ApplicationContextAware
         }
         if(entity == null) entity = entityClass.newInstance();
 
-        final BindingResult bindingResult = new BindException(entity, "");
+        final Errors errors = new BindException(entity, entityClassName);
         for(final String fieldName : request.getParameterMap().keySet())
         {
             try
@@ -106,21 +107,14 @@ public class EntityController implements ApplicationContextAware
                 }
                 else
                 {
-                    if (!conversionService.canConvert(String.class, entityField.getType()))
+                    try
                     {
-                        bindingResult.rejectValue(fieldName, "Must be convertible to " + entityField.getType());
+                        ReflectionUtils.setFieldValue(entityField, entity,
+                                                      conversionService.convert(fieldValue, entityField.getType()));
                     }
-                    else
+                    catch (final Exception e)
                     {
-                        try
-                        {
-                            ReflectionUtils.setFieldValue(entityField, entity,
-                                                          conversionService.convert(fieldValue, entityField.getType()));
-                        }
-                        catch (final Exception e)
-                        {
-                            bindingResult.rejectValue(fieldName, "Must be convertible to " + entityField.getType());
-                        }
+                        errors.rejectValue(fieldName, "Must be convertible to " + entityField.getType());
                     }
                 }
             }
@@ -130,9 +124,10 @@ public class EntityController implements ApplicationContextAware
             }
         }
 
-        validator.validate(entity, bindingResult);
-        if(bindingResult.hasErrors())
+        validator.validate(entity, errors);
+        if(errors.hasErrors())
         {
+            uiModel.addAttribute("errors", errors);
             return show(uiModel, entityClassName, entity.getId());
         }
 

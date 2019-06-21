@@ -35,6 +35,11 @@
 											th:value="${referencedEntity.getId()}">
 									</option>
 								</select>
+								
+								&nbsp;
+								
+								<span class="fieldError" th:if="${errors != null && errors.getFieldError(entityField.getName()) != null}" th:text="${errors.getFieldError(entityField.getName()).getCode()}">
+								</span>
 							</td>
 						</tr>
 					</tbody>

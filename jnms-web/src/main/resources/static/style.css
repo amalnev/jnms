@@ -39,6 +39,6 @@
     border: none;
 }
 
-#errorBox {
+#errorBox, .fieldError {
     color: red;
 }

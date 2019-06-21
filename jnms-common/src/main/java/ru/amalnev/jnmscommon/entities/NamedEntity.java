@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotBlank;
 
 @MappedSuperclass
 @AllArgsConstructor
@@ -17,6 +18,7 @@ public abstract class NamedEntity extends AbstractEntity
     @Setter
     @DisplayName(value = "Object name", orderOfAppearance = 2)
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Object names must be non-empty and unique across objects of the same type")
     private String name;
 
     @Override
