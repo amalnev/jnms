@@ -37,6 +37,7 @@ public class DataGridController implements ApplicationContextAware
         repository.findAll().forEach((final Object entity) -> {
             List<Field> displayFields = ReflectionUtils.getFields(entity.getClass()).stream()
                     .filter(field -> field.isAnnotationPresent(DisplayName.class))
+                    .sorted(Comparator.comparingInt(field -> field.getAnnotation(DisplayName.class).orderOfAppearance()))
                     .collect(Collectors.toList());
             if(columnNames.isEmpty())
             {

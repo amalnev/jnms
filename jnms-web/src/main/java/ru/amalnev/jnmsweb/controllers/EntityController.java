@@ -11,17 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import ru.amalnev.jnmscommon.entities.AbstractEntity;
-import ru.amalnev.jnmscommon.entities.DisplayName;
 import ru.amalnev.jnmscommon.utilities.ReflectionUtils;
 import ru.amalnev.jnmsweb.constants.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/entity")
@@ -37,9 +31,9 @@ public class EntityController implements ApplicationContextAware
     private SmartValidator validator;
 
     @GetMapping
-    protected String show(final Model uiModel,
-                          final @RequestParam String entityClassName,
-                          final @RequestParam Long entityId)
+    private String show(final Model uiModel,
+                        final @RequestParam String entityClassName,
+                        final @RequestParam Long entityId)
             throws
             InstantiationException,
             IllegalAccessException,
@@ -52,11 +46,6 @@ public class EntityController implements ApplicationContextAware
                 (AbstractEntity) repository.findById(entityId).orElse(entityClass.newInstance()) :
                 entityClass.newInstance();
 
-//        final List<String> fieldNames = ReflectionUtils.getFields(entity.getClass()).stream()
-//                .filter(field -> field.isAnnotationPresent(DisplayName.class))
-//                .map(field -> field.getName())
-//                .collect(Collectors.toList());
-
         uiModel.addAttribute("viewType", "entity");
         uiModel.addAttribute("entity", entity);
         uiModel.addAttribute("springContext", applicationContext);
@@ -65,12 +54,20 @@ public class EntityController implements ApplicationContextAware
     }
 
     @PostMapping("/save")
-    protected String save(final Model uiModel,
-                          final HttpServletRequest request) throws Exception
+    private String save(final Model uiModel,
+                        final HttpServletRequest request) throws Exception
     {
         //TODO: clarify exception
         if(!request.getParameterMap().containsKey("entityClassName")) throw new Exception();
         final String entityClassName = request.getParameterMap().get("entityClassName")[0];
+
+        //TODO: clarify exception
+        if(!request.getParameterMap().containsKey("action")) throw new Exception();
+        final String requestedAction = request.getParameterMap().get("action")[0];
+        if(requestedAction.equals("Cancel"))
+        {
+            return "redirect:/grid?entityClassName=" + entityClassName;
+        }
 
         final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
