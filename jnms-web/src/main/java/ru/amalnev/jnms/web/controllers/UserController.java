@@ -58,7 +58,7 @@ public class UserController implements ApplicationContextAware
         {
             final User existingUser = securityService.findUserById(user.getId()).orElse(new User());
             existingUser.setUsername(user.getUsername());
-            if(user.getPassword() != null && !user.getPassword().isEmpty())
+            if (user.getPassword() != null && !user.getPassword().isEmpty())
             {
                 existingUser.setPassword(user.getPassword());
             }
