@@ -11,6 +11,8 @@ import ru.amalnev.jnmscommon.entities.security.User;
 import ru.amalnev.jnmscommon.services.SecurityService;
 import ru.amalnev.jnmsweb.constants.Constants;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/users")
 public class UserController implements ApplicationContextAware
@@ -46,9 +48,23 @@ public class UserController implements ApplicationContextAware
 
     @PostMapping("/save")
     private String save(final Model uiModel,
-                        final @ModelAttribute User user)
+                        final @ModelAttribute User user,
+                        final HttpServletRequest request) throws Exception
     {
-        securityService.saveUser(user);
+        //TODO: clarify exception
+        if (!request.getParameterMap().containsKey("action")) throw new Exception();
+        final String requestedAction = request.getParameterMap().get("action")[0];
+        if (requestedAction.equals("Save"))
+        {
+            final User existingUser = securityService.findUserById(user.getId()).orElse(new User());
+            existingUser.setUsername(user.getUsername());
+            if(user.getPassword() != null && !user.getPassword().isEmpty())
+            {
+                existingUser.setPassword(user.getPassword());
+            }
+
+            securityService.saveUser(existingUser);
+        }
 
         return "redirect:/users";
     }

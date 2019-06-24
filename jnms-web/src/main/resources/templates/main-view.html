@@ -1,54 +1,83 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" th:href="@{/style.css}"/>
 		<title>jNMS</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" th:href="@{/assets/css/main.css}" />
 		<script th:src="@{/uiSupport.js}"></script>
 	</head>
-	<body onload="onDocumentLoaded();">
-		<div id="header">jNMS</span>
-		
+	<body class="is-preload" onload="onDocumentLoaded();">
+
+		<!-- Sidebar -->
+		<div id="header">
+
+			<div class="top">
+
+				<!-- Logo -->
+				<div id="logo">
+					<a th:href="@{/}">
+						<h1 id="title">jNMS</h1>
+						<p>Network Management System</p>
+					</a>
+				</div>
+
+				<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
+							<a th:href="@{/users}">
+								<span class="icon solid fa-user">Users</span>
+							</a>
+						</li>
+						<li th:each="entityRecord : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
+							<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}">
+								<span class="icon solid fa-th" th:text="${entityRecord.value}"></span>
+							</a>
+						</li>
+						<li>
+							<a th:href="@{/logout}">
+								<span class="icon solid fa-th">Sign out</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+
 		</div>
-		<div id="content">
-			<div id="sidebarContainer">
-				<ul id="entityMenu">
-					<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
-						<a th:href="@{/users}">
-							Users
-						</a>
-					</li>
-					<li th:each="entityRecord : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
-						<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}"
-							th:text="${entityRecord.value}">
-						</a>
-					</li>
-					<li>
-						<a th:href="@{/logout}">Sign Out</a>
-					</li>
-				</ul>
-			</div>
-			
-			<div id="viewContainer">
-				<div th:if="${viewType == 'none'}"></div>
-				<div th:if="${viewType == 'grid'}">
-					<div th:replace="data-grid :: grid(columnNames=${columnNames}, columnValues=${columnValues}, entityClassName=${entityClassName})">
+
+		<!-- Main -->
+		<div id="main">
+			<section class="two">
+				<div class="container">
+					<!-- viewType == 'none' - не показываем ничего -->
+					<div th:if="${viewType == 'none'}"></div>
+					
+					<!-- viewType == 'grid' - показываем таблицу сущностей из соответствующего репозитория -->
+					<div th:if="${viewType == 'grid'}">
+						<div th:replace="data-grid :: grid(columnNames=${columnNames}, columnValues=${columnValues}, entityClassName=${entityClassName})">
+						</div>
+					</div>
+					
+					<!-- viewType == 'entity' - показываем форму редактирования сущности -->
+					<div th:if="${viewType == 'entity'}">
+						<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
+						</div>
+					</div>
+					
+					<!-- Сущности типа "Пользователь" обрабатываются особым образом - для них отдельная таблица и форма -->
+					<div th:if="${viewType == 'userGrid'}">
+						<div th:replace="user-grid :: userGrid(users=${users})">
+						</div>
+					</div>
+					<div th:if="${viewType == 'userForm'}">
+						<div th:replace="user-view :: userForm(user=${user})">
+						</div>
 					</div>
 				</div>
-				<div th:if="${viewType == 'entity'}">
-					<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
-					</div>
-				</div>
-				<div th:if="${viewType == 'userGrid'}">
-					<div th:replace="user-grid :: userGrid(users=${users})">
-					</div>
-				</div>
-				<div th:if="${viewType == 'userForm'}">
-					<div th:replace="user-view :: userForm(user=${user})">
-					</div>
-				</div>
-			</div>
+			</section>
 		</div>
 	</body>
 </html>

@@ -8,7 +8,7 @@ function onDocumentLoaded() {
             var passwordField = document.getElementById("passwordField");
             var passwordConfirmationField = document.getElementById("passwordConfirmationField");
 
-            if (checkBox.checked) {
+            if (passwordField.disabled) {
                 passwordField.disabled = false;
                 passwordConfirmationField.disabled = false;
             } else {

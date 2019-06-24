@@ -24,8 +24,8 @@ public class UserRole extends NamedEntity
 
     @Getter
     @Setter
-    @Min(0)
-    @Max(15)
+    @Min(value = 0, message = "Minimum privilege level is 0")
+    @Max(value = 15, message = "Maximum privilege level is 15")
     @DisplayName(value = "Privilege level", orderOfAppearance = 3)
     private int privilegeLevel;
 

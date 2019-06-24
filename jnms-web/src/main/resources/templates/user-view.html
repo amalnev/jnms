@@ -15,10 +15,9 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<label>
-									<input type="checkbox" id="changePasswordCheckbox"/>
+								<button id="changePasswordCheckbox" type="button">
 									Set password
-								</label>
+								</button>
 							</td>
 						</tr>
 						<tr>
@@ -39,13 +38,9 @@
 					</tbody>
 				</table>
 				<br>
-				<input type="button" value="Save" id="saveButton"/>
+				<button type="submit" name="action" value="Save">Save</button>
+				<button type="submit" name="action" value="Cancel">Cancel</button>
 			</form>
-			
-			<form action="#" th:action="@{/users}" method="get">
-				<input type="submit" value="Cancel"/>
-			</form>
-
 		</div>
 	</body>
 </html>

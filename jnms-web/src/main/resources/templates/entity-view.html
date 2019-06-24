@@ -38,7 +38,7 @@
 								
 								&nbsp;
 								
-								<span class="fieldError" th:if="${errors != null && errors.getFieldError(entityField.getName()) != null}" th:text="${errors.getFieldError(entityField.getName()).getCode()}">
+								<span class="fieldError" th:if="${errors != null && errors.getFieldError(entityField.getName()) != null}" th:text="${errors.getFieldError(entityField.getName()).getDefaultMessage()}">
 								</span>
 							</td>
 						</tr>
