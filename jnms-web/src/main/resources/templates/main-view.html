@@ -31,7 +31,7 @@
 								<span class="icon solid fa-user">Users</span>
 							</a>
 						</li>
-						<li th:each="entityRecord : ${T(ru.amalnev.jnmscommon.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
+						<li th:each="entityRecord : ${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
 							<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}">
 								<span class="icon solid fa-th" th:text="${entityRecord.value}"></span>
 							</a>
