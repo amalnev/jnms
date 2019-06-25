@@ -18,14 +18,21 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Класс-котейнер для статических утилит, в основном касающихся работы с
+ * репозиториями и сущностями через рефлексию
+ *
+ * @author Aleksei Malnev
+ */
 public class ReflectionUtils
 {
-    public static boolean isRepository(Class<?> aClass)
-    {
-        return aClass.isAnnotationPresent(Repository.class);
-    }
-
-    public static Class getEntityClass(final Object repositoryBean)
+    /**
+     * Находит класс сущности по бину репозитория.
+     *
+     * @param repositoryBean Spring Data репозиторий
+     * @return Класс сущностей, содержащихся в данном репозитории
+     */
+    private static Class getEntityClass(final Object repositoryBean)
     {
         for (final Class<?> interfaceClass : AopProxyUtils.proxiedUserInterfaces(repositoryBean))
         {
@@ -36,6 +43,13 @@ public class ReflectionUtils
         return null;
     }
 
+    /**
+     * Возвращает Spring Data репозиторий, содержащий сущности заданного класса.
+     *
+     * @param springContext Spring application context
+     * @param entityClass Класс сущности, для которого нужно найти репозиторий
+     * @return Бин репозитория, содержащий сущности заданного класса.
+     */
     public static CrudRepository getRepositoryByEntityClass(final ApplicationContext springContext,
                                                             final Class<? extends AbstractEntity> entityClass)
     {
@@ -53,6 +67,16 @@ public class ReflectionUtils
         return null;
     }
 
+    /**
+     * Собирает коллекцию классов сущностей, с которыми может работать текущий пользователь. В эту коллекцию
+     * попадают сущности, аннотированные с помощью @DisplayName, для которых заданы минимальные права доступа
+     * меньшие либо равные правам доступа текущего пользователя. Возвращается Map, в которой ключом является
+     * класс сущности, значением - атрибут value() аннотации @DisplayName. Возвращаемый результат отсортирован в
+     * соответствии с атрибутом orderOfAppearance аннотации @DisplayName.
+     *
+     * @param springContext Spring application context
+     * @return Коллекция классов сущностей, с которыми может работать текущий пользователь
+     */
     public static Map<Class<? extends AbstractEntity>, String> getDisplayableEntities(final ApplicationContext springContext)
     {
         List<Class<? extends AbstractEntity>> resultList = new ArrayList<>();
@@ -93,6 +117,15 @@ public class ReflectionUtils
         return result;
     }
 
+    /**
+     * Возвращает список отображаемых в UI полей заданного класса сущностей. В список попадают все
+     * поля запрошенного класса и его родительских классов, помеченные аннотацией @DisplayName.
+     * Возвращаемый список сортируется в порядке возрастания атрибута orderOfAppearance аннотации
+     * @DisplayName
+     *
+     * @param entityClass Класс сущности, для которой нужно собрать отображаемые поля
+     * @return Список отображаемых полей для запрошенного класса.
+     */
     public static List<Field> getDisplayableFields(final Class<? extends AbstractEntity> entityClass)
     {
         return getFields(entityClass).stream()
@@ -101,6 +134,15 @@ public class ReflectionUtils
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Устанавливает заданное поле заданного объекта в заданное значение.
+     * Может работать с полями, игнорируя уровни доступа private, protected.
+     *
+     * @param field Поле, для которого нужно установить новое значение.
+     * @param target Объект, для которого нужно установить значение поля.
+     * @param value Новое значение
+     * @throws IllegalAccessException
+     */
     public static void setFieldValue(final Field field,
                                      final Object target,
                                      final Object value) throws IllegalAccessException
@@ -123,12 +165,26 @@ public class ReflectionUtils
         return fields;
     }
 
+    /**
+     * Рекурсивно собирает все поля, объявленные в заданном классе и его предках.
+     *
+     * @param type Класс, для которого нужно собрать поля.
+     * @return Список полей запрошенного класса и его предков.
+     */
     public static List<Field> getFields(Class<?> type)
     {
-        final List<Field> fields = new ArrayList<Field>();
+        final List<Field> fields = new ArrayList<>();
         return getFields(fields, type);
     }
 
+    /**
+     * Возвращает значение заданного поля для заданного объекта.
+     * Находит и вызывает getter для запрошенного поля.
+     *
+     * @param field Поле, для которого нужно получить текущее значение
+     * @param o Объект, для которого нужно получить значение поля
+     * @return Значение поля.
+     */
     public static Object runGetter(Field field, Object o)
     {
         for (Method method : o.getClass().getMethods())
@@ -156,32 +212,70 @@ public class ReflectionUtils
         return null;
     }
 
+    /**
+     * Возвращает true, если заданное поле помечено аннотацией @DisplayName
+     *
+     * @param field Поле, которое нужно проверить
+     * @return true, если заданное поле помечено аннотацией @DisplayName
+     */
     public static boolean isDisplayableField(final Field field)
     {
         return field.isAnnotationPresent(DisplayName.class);
     }
 
+    /**
+     * Возвращает атрибут value() аннотации @DisplayName для задданого поля.
+     *
+     * @param field
+     * @return
+     */
     public static String getDisplayName(final Field field)
     {
         return field.getAnnotation(DisplayName.class).value();
     }
 
+    /**
+     * Возвращает true, если заданное поле помечено аннотацией @OneToMany
+     *
+     * @param field Поле, которое нужно проверить
+     * @return true, если заданное поле помечено аннотацией @OneToMany
+     */
     public static boolean isOneToManyReference(final Field field)
     {
         return field.isAnnotationPresent(OneToMany.class);
     }
 
+    /**
+     * Возвращает true, если заданное поле помечено аннотацией @ManyToOne
+     *
+     * @param field Поле, которое нужно проверить
+     * @return true, если заданное поле помечено аннотацией @ManyToOne
+     */
     public static boolean isManyToOneReference(final Field field)
     {
         return field.isAnnotationPresent(ManyToOne.class);
     }
 
+    /**
+     * Возвращает true, если заданное поле не является ссылкой типа @OneToMany
+     * или @ManyToOne и при этом помечено аннотацией @DisplayName
+     *
+     * @param field Поле, которое нужно проверить
+     * @return
+     */
     public static boolean isOrdinaryDataField(final Field field)
     {
         return !isManyToOneReference(field) && !isOneToManyReference(field) &&
                 isDisplayableField(field);
     }
 
+    /**
+     * Возвращает true, если заданное поле помечено аннотацией @DisplayName
+     * и ее атрибут readonly усановлен в true.
+     *
+     * @param field
+     * @return
+     */
     public static boolean isDisabledField(final Field field)
     {
         if (isDisplayableField(field))

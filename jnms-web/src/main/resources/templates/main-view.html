@@ -10,7 +10,8 @@
 	</head>
 	<body class="is-preload" onload="onDocumentLoaded();">
 
-		<!-- Sidebar -->
+		<!-- Sidebar
+		 	 Содержит меню сайта -->
 		<div id="header">
 
 			<div class="top">
@@ -26,16 +27,22 @@
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
+						<!-- Если текущий пользователь обладает максимальными правами, то даем ему ссылку на
+						 	 CRUD-формы сущности User -->
 						<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
 							<a th:href="@{/users}">
 								<span class="icon solid fa-user">Users</span>
 							</a>
 						</li>
+						
+						<!-- Выводим список сущностей, над которыми текущему пользователю разрешено выполнять CRUD-операции -->
 						<li th:each="entityRecord : ${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).getDisplayableEntities(springContext)}">
 							<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}">
 								<span class="icon solid fa-th" th:text="${entityRecord.value}"></span>
 							</a>
 						</li>
+						
+						<!-- Выводим ссылку Logout -->
 						<li>
 							<a th:href="@{/logout}">
 								<span class="icon solid fa-th">Sign out</span>
@@ -48,7 +55,9 @@
 
 		</div>
 
-		<!-- Main -->
+		<!-- Main
+		     Рабочая область, в которой отображается содержимое разделов.
+		     Здесь может отображаться тот или иной фрагмент. Какой именно - определяется атрибутом viewType -->
 		<div id="main">
 			<section class="two">
 				<div class="container">

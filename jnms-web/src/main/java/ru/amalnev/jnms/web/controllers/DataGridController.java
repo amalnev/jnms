@@ -18,6 +18,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Этот контроллер отвечает за вывод таблицы имеющихся в системе
+ * сущностей определенного класса
+ *
+ * @author Aleksei Malnev
+ */
 @Controller
 @RequestMapping("/grid")
 public class DataGridController implements ApplicationContextAware
@@ -25,26 +31,43 @@ public class DataGridController implements ApplicationContextAware
     @Setter
     private ApplicationContext applicationContext;
 
+    /**
+     * Готовит данные для отображения HTML-таблицы, содержащей список сущностей заданного типа
+     *
+     * @param uiModel
+     * @param entityClassName
+     * @return
+     * @throws ClassNotFoundException
+     */
     @GetMapping
     protected String show(final Model uiModel,
                           final @RequestParam String entityClassName) throws ClassNotFoundException
     {
+        //Находим класс сущности по имени
         final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
+
+        //Находим соответствующий репозиторий
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
 
+        //Этот список будет содержать имена колонок в таблице
         final List<String> columnNames = new ArrayList<>();
-        final Map<Long, List<String>> columnValues = new LinkedHashMap<>();
-        repository.findAll().forEach((final Object entity) -> {
-            List<Field> displayFields = ReflectionUtils.getFields(entity.getClass()).stream()
-                    .filter(field -> field.isAnnotationPresent(DisplayName.class))
-                    .sorted(Comparator.comparingInt(field -> field.getAnnotation(DisplayName.class).orderOfAppearance()))
-                    .collect(Collectors.toList());
-            if(columnNames.isEmpty())
-            {
-                displayFields.forEach(field -> columnNames.add(field.getAnnotation(DisplayName.class).value()));
-                uiModel.addAttribute("columnNames", columnNames);
-            }
 
+        //Этот Map будет содержать значения ячеек в таблице. Ключ - id сущности, Значение - список значений полей сущности
+        final Map<Long, List<String>> columnValues = new LinkedHashMap<>();
+
+        //Получаем список отображаемых полей сущности, сортируем его в соответствии со значением
+        //атрибута orderOfAppearance аннотации @DisplayName
+        List<Field> displayFields = ReflectionUtils.getFields(entityClass).stream()
+                .filter(field -> field.isAnnotationPresent(DisplayName.class))
+                .sorted(Comparator.comparingInt(field -> field.getAnnotation(DisplayName.class).orderOfAppearance()))
+                .collect(Collectors.toList());
+
+        //Заполняем список имен колонок
+        displayFields.forEach(field -> columnNames.add(field.getAnnotation(DisplayName.class).value()));
+        uiModel.addAttribute("columnNames", columnNames);
+
+        //Заполняем значения ячеек таблицы
+        repository.findAll().forEach((final Object entity) -> {
             final List<String> values = new ArrayList<>();
             columnValues.put(((AbstractEntity) entity).getId(), values);
             displayFields.forEach(field -> {
@@ -53,6 +76,7 @@ public class DataGridController implements ApplicationContextAware
             });
         });
 
+        //Передаем полученные данные на front
         uiModel.addAttribute("columnValues", columnValues);
         uiModel.addAttribute("entityClassName", entityClassName);
         uiModel.addAttribute("springContext", applicationContext);
@@ -60,15 +84,30 @@ public class DataGridController implements ApplicationContextAware
         return Constants.MAIN_VIEW;
     }
 
+    /**
+     * Удаляет сущность заданного класса по id
+     *
+     * @param uiModel
+     * @param entityClassName
+     * @param entityId
+     * @return
+     * @throws ClassNotFoundException
+     */
     @GetMapping("/delete")
     private String delete(final Model uiModel,
                           final @RequestParam String entityClassName,
                           final @RequestParam Long entityId) throws ClassNotFoundException
     {
+        //Находим класс сущности по имени
         final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
+
+        //Находим соответствующий репозиторий
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
+
+        //Производим удаление
         repository.deleteById(entityId);
 
+        //Возвращаемся к таблице сущностей
         return "redirect:/grid?entityClassName=" + entityClassName;
     }
 }

@@ -11,6 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * Данный класс отвечает за создание необходимых Spring JPA бинов, поскольку в данном
+ * модуле boot не используется. Бины конфигурируются на основе информации из persistence.xml.
+ * Кроме того, создается PasswordEncoder для хранения паролей в зашифрованном виде.
+ *
+ * @author Aleksei Malnev
+ */
 @Configuration
 @ComponentScan
 @EnableJpaRepositories(basePackages = "ru.amalnev.jnms.common.repositories")

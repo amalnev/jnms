@@ -8,6 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.amalnev.jnms.web.constants.Constants;
 
+/**
+ * Контроллер, отвечающий за вывод начальной страницы приложения
+ *
+ * @author Aleksei Malnev
+ */
 @Controller
 public class MainController implements ApplicationContextAware
 {

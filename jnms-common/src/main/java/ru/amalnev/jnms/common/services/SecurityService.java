@@ -23,6 +23,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Данный класс реализует бин с интерфейсом UserDetailsService, который необходим
+ * для функционирования Spring security. Также реализованы методы для работы с сущностями
+ * User и некоторые утилиты.
+ *
+ * @author Aleksei Malnev
+ */
 @Service
 public class SecurityService implements UserDetailsService
 {
@@ -104,18 +111,21 @@ public class SecurityService implements UserDetailsService
         return user;
     }
 
+    /**
+     * Данная функция возвращает уровень привилегий текущего пользователя.
+     *
+     * @return
+     */
     public int getCurrentPrivilegeLevel()
     {
-        final Function<GrantedAuthority, Integer> getPrivlegeByAuthority =
-                (final GrantedAuthority auth) -> roleRepository.findByName(auth.getAuthority()).getPrivilegeLevel();
-
-        Authentication auth1 = SecurityContextHolder.getContext().getAuthentication();
-
-        final GrantedAuthority strongestAuthority = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+        //Текущему пользователю может быть назначено несколько ролей.
+        //Найдем роль с максимальными привилегиями.
+        final int strongestPrivilege = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .stream()
-                .max(Comparator.comparingInt(auth -> getPrivlegeByAuthority.apply((GrantedAuthority) auth)))
-                .orElse(null);
-        if (strongestAuthority != null) return getPrivlegeByAuthority.apply(strongestAuthority);
-        return 0;
+                .mapToInt(auth -> roleRepository.findByName(auth.getAuthority()).getPrivilegeLevel())
+                .max()
+                .orElse(0);
+
+        return strongestPrivilege;
     }
 }

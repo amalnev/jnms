@@ -14,6 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.amalnev.jnms.common.services.SecurityService;
 
+/**
+ * Конфигурация Spring security для web приложения
+ *
+ * @author Aleksei Malnev
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -46,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                //.antMatchers("/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
