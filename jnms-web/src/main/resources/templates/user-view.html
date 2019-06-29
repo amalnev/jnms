@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div th:fragment="userForm(user)">
+			<form action="#" th:object="${user}" th:action="@{/users/save}" method="post" id="userForm">
+				<input type="hidden" th:field="*{id}" th:value="${user.id}"/>
+				<table class="entityForm">
+					<tbody>
+						<tr>
+							<td>Username:</td>
+							<td><input type="text" th:field="*{username}" th:value="${user.username}"/></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button id="changePasswordCheckbox" type="button">
+									Set password
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>Password</td>
+							<td><input type="password" id="passwordField" th:field="*{password}" disabled/></td>
+						</tr>
+						<tr>
+							<td>Confirm password</td>
+							<td>
+								<input type="password" id="passwordConfirmationField" th:field="*{passwordConfirmation}" disabled/>
+								<span id="errorBox"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>Assigned authorities</td>
+							<td><span th:text="${user.authorities}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<button type="submit" name="action" value="Save">Save</button>
+				<button type="submit" name="action" value="Cancel">Cancel</button>
+			</form>
+		</div>
+	</body>
+</html>
