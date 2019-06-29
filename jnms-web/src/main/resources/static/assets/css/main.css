@@ -2259,6 +2259,8 @@ input, select, textarea {
 			}
 
 			#main > section.two {
+				overflow-x: scroll;
+				font-size: 18px;
 				background-color: #f5fafa;
 			}
 
