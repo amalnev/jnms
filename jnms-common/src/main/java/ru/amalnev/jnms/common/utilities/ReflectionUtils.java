@@ -3,7 +3,6 @@ package ru.amalnev.jnms.common.utilities;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import ru.amalnev.jnms.common.entities.AbstractEntity;
 import ru.amalnev.jnms.common.entities.DisplayName;
 import ru.amalnev.jnms.common.entities.MinPrivilege;
@@ -47,7 +46,7 @@ public class ReflectionUtils
      * Возвращает Spring Data репозиторий, содержащий сущности заданного класса.
      *
      * @param springContext Spring application context
-     * @param entityClass Класс сущности, для которого нужно найти репозиторий
+     * @param entityClass   Класс сущности, для которого нужно найти репозиторий
      * @return Бин репозитория, содержащий сущности заданного класса.
      */
     public static CrudRepository getRepositoryByEntityClass(final ApplicationContext springContext,
@@ -121,10 +120,10 @@ public class ReflectionUtils
      * Возвращает список отображаемых в UI полей заданного класса сущностей. В список попадают все
      * поля запрошенного класса и его родительских классов, помеченные аннотацией @DisplayName.
      * Возвращаемый список сортируется в порядке возрастания атрибута orderOfAppearance аннотации
-     * @DisplayName
      *
      * @param entityClass Класс сущности, для которой нужно собрать отображаемые поля
      * @return Список отображаемых полей для запрошенного класса.
+     * @DisplayName
      */
     public static List<Field> getDisplayableFields(final Class<? extends AbstractEntity> entityClass)
     {
@@ -138,9 +137,9 @@ public class ReflectionUtils
      * Устанавливает заданное поле заданного объекта в заданное значение.
      * Может работать с полями, игнорируя уровни доступа private, protected.
      *
-     * @param field Поле, для которого нужно установить новое значение.
+     * @param field  Поле, для которого нужно установить новое значение.
      * @param target Объект, для которого нужно установить значение поля.
-     * @param value Новое значение
+     * @param value  Новое значение
      * @throws IllegalAccessException
      */
     public static void setFieldValue(final Field field,
@@ -182,7 +181,7 @@ public class ReflectionUtils
      * Находит и вызывает getter для запрошенного поля.
      *
      * @param field Поле, для которого нужно получить текущее значение
-     * @param o Объект, для которого нужно получить значение поля
+     * @param o     Объект, для которого нужно получить значение поля
      * @return Значение поля.
      */
     public static Object runGetter(Field field, Object o)

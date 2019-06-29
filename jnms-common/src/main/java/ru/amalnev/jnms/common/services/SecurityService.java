@@ -2,8 +2,6 @@ package ru.amalnev.jnms.common.services;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,10 +16,8 @@ import ru.amalnev.jnms.common.repositories.IUserRepository;
 import ru.amalnev.jnms.common.repositories.IUserRoleRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Данный класс реализует бин с интерфейсом UserDetailsService, который необходим
