@@ -54,6 +54,10 @@ public class User extends AbstractEntity implements UserDetails
     private Set<Authority> authorities;
 
     @Getter
+    @Setter
+    private String picture;
+
+    @Getter
     @Transient
     private final boolean accountNonExpired = true;
 
