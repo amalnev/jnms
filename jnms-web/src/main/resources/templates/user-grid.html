@@ -17,10 +17,10 @@
 					<tr th:if="${users.empty}">
 						<td colspan="2"> No users available</td>
 					</tr>
-					<tr th:each="user : ${users}">
+					<tr th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}" th:each="user : ${users}">
 						<td><span th:text="${user.id}"></span></td>
 						<td><span th:text="${user.username}"></span></td>
-						<td><span th:text="${user.authorities}"></td>
+						<td><span th:text="${user.authorities}"></span></td>
 						<td>
 							<form action="#" th:action="@{/users/user}" method="get">
 								<input type="hidden" th:name="userId" th:value="${user.id}"/>
@@ -34,10 +34,15 @@
 							</form>
 						</td>
 					</tr>
+					<tr th:if="${@securityService.getCurrentPrivilegeLevel() < 15}">
+						<td><span th:text="${@securityService.getCurrentUser().getId()}"></span></td>
+						<td><span th:text="${@securityService.getCurrentUser().getUsername()}"></span></td>
+						<td><span th:text="${@securityService.getCurrentUser().getAuthorities()}"></span></td>
+					</tr>
 				</tbody>
 			</table>
 			<br>
-			<form action="#" th:action="@{/users/user}" method="get">
+			<form th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}" action="#" th:action="@{/users/user}" method="get">
 				<input type="hidden" th:name="userId" th:value="-1"/>
 				<button type="submit">New</button>
 			</form>

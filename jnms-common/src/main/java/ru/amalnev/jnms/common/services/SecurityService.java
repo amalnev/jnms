@@ -124,4 +124,9 @@ public class SecurityService implements UserDetailsService
 
         return strongestPrivilege;
     }
+
+    public User getCurrentUser()
+    {
+        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
 }
