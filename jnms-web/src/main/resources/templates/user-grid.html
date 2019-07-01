@@ -10,6 +10,7 @@
 					<tr>
 						<th>ID</th>
 						<th>Username</th>
+						<th>Image</th>
 						<th>Authorities</th>
 					</tr>
 				</thead>
@@ -20,6 +21,7 @@
 					<tr th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}" th:each="user : ${users}">
 						<td><span th:text="${user.id}"></span></td>
 						<td><span th:text="${user.username}"></span></td>
+						<td><img width="100" height="100" th:src="@{/users/image(userId=${user.id})}"></td>
 						<td><span th:text="${user.authorities}"></span></td>
 						<td>
 							<form action="#" th:action="@{/users/user}" method="get">

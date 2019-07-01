@@ -5,4 +5,8 @@
             <column name="picture" type="VARCHAR(255)"></column>
         </addColumn>
     </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-171">
+        <modifyDataType tableName="User" columnName="picture" newDataType="BLOB"/>
+    </changeSet>
 </databaseChangeLog>
