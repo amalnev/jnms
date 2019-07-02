@@ -41,30 +41,6 @@ public class SecurityService implements UserDetailsService
     @Setter(onMethod = @__({@Autowired}))
     private PasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    private void init()
-    {
-        /*Проверяем, являются ли пустыми репозитории пользователей и назначенных им ролей*/
-        final List<User> users = findAllUsers();
-        final List<UserRole> roles = findAllUserRoles();
-        final List<Authority> authorities = findAllAuthorities();
-
-        //Если репозитории пустые - создаем начальных пользователей и назначаем им роли
-        //для того чтобы инициализировать подсистему безопасности в работоспособное начальное состояние
-        if (users.size() == 0 && roles.size() == 0 && authorities.size() == 0)
-        {
-            final User root = new User("root", passwordEncoder.encode("root"));
-            final UserRole rootRole = new UserRole("ROLE_ROOT", 15);
-
-            userRepository.save(root);
-            roleRepository.save(rootRole);
-
-            final Authority rootAuthority = new Authority(root, rootRole);
-
-            authorityRepository.save(rootAuthority);
-        }
-    }
-
     public List<UserRole> findAllUserRoles()
     {
         return (List<UserRole>) roleRepository.findAll();

@@ -122,4 +122,22 @@
     <changeSet author="amalnev (generated)" id="1561373236882-17">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="Authority" constraintName="FKt4xgqapa2sbud8t05vt53keac" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="User"/>
     </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-18">
+        <insert tableName="User">
+            <column name="id" value="1" />
+            <column name="username" value="root" />
+            <column name="password" value="$2a$10$dwmvqHT9Xr69sTKkoU8af.EPRgB7s49.SEjuqgK8QFo.PiWzqKUrq" />
+        </insert>
+        <insert tableName="UserRole">
+            <column name="id" value="1" />
+            <column name="name" value="ROLE_ROOT" />
+            <column name="privilegeLevel" value="15" />
+        </insert>
+        <insert tableName="Authority">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1" />
+            <column name="userRole_id" value="1" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>
