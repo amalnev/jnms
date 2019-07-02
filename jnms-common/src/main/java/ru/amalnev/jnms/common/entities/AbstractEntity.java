@@ -14,7 +14,7 @@ import javax.persistence.MappedSuperclass;
  * @author Aleksei Malnev
  */
 @MappedSuperclass
-public abstract class AbstractEntity
+public abstract class AbstractEntity implements Cloneable
 {
     /**
      * Идентификатор сущности.
@@ -27,4 +27,9 @@ public abstract class AbstractEntity
     @DisplayName(value = "Object ID", readonly = true, orderOfAppearance = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public AbstractEntity clone() throws CloneNotSupportedException
+    {
+        return (AbstractEntity) super.clone();
+    }
 }

@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.amalnev.jnms.common.entities.AbstractEntity;
 import ru.amalnev.jnms.common.utilities.ReflectionUtils;
 import ru.amalnev.jnms.web.constants.Constants;
+import ru.amalnev.jnms.web.undo.UndoCreate;
+import ru.amalnev.jnms.web.undo.UndoOperation;
+import ru.amalnev.jnms.web.undo.UndoOperationsStack;
+import ru.amalnev.jnms.web.undo.UndoUpdate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
@@ -40,6 +44,9 @@ public class EntityController implements ApplicationContextAware
 
     @Setter(onMethod = @__({@Autowired}))
     private SmartValidator validator;
+
+    @Setter(onMethod = @__({@Autowired}))
+    private UndoOperationsStack undoOperations;
 
     /**
      * Готовит данные для отображения формы редактирования
@@ -123,12 +130,28 @@ public class EntityController implements ApplicationContextAware
         //Находим в данных POST-запроса параметр id и по нему находим соответствующую сущность
         //или создаем новую
         AbstractEntity entity = null;
+        UndoOperation undoOperation = null;
         if (request.getParameterMap().containsKey("id"))
         {
             final Long id = conversionService.convert(request.getParameterMap().get("id")[0], Long.class);
             if (id != null) entity = (AbstractEntity) repository.findById(id).orElse(null);
         }
-        if (entity == null) entity = entityClass.newInstance();
+
+        if (entity == null)
+        {
+            //Сущность с переданным в запросе id не была найдена в репозитории.
+            //Создаем новый экземпляр сущности и операцию отмены запроса INSERT
+            entity = entityClass.newInstance();
+            undoOperation = applicationContext.getBean(UndoCreate.class);
+        }
+        else
+        {
+            //Сущность с переданным в запросе id не была найдена в репозитории.
+            //Создаем операцию отмены запроса UPDATE
+            undoOperation = applicationContext.getBean(UndoUpdate.class);
+            final UndoUpdate undoUpdate = (UndoUpdate) undoOperation;
+            undoUpdate.setOriginalEntity(entity.clone());
+        }
 
         //Парсим данные из POST-запроса и записываем значения в соответствующие поля сущности.
         //Если с какими-то полями будут возникать проблемы, то ошибки будем записывать в этот объект Errors
@@ -203,6 +226,12 @@ public class EntityController implements ApplicationContextAware
 
         //ошибок не было, сохраняем сущность в репозиторий
         repository.save(entity);
+
+        //Передаем сущность в операцию отмены
+        undoOperation.setEntity(entity);
+
+        //Запоминаем операцию отмены
+        undoOperations.add(undoOperation);
 
         //возвращаемся на страницу таблицы сущностей
         return "redirect:/grid?entityClassName=" + entityClassName;

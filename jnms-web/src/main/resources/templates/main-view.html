@@ -52,6 +52,13 @@
 							</a>
 						</li>
 						
+						<!-- Выводим ссылку на страницу списка откатываемых операций -->
+						<li>
+							<a th:href="@{/undo}">
+								<span class="icon solid fa-th">Operations log</span>
+							</a>
+						</li>
+						
 						<!-- Выводим ссылку Logout -->
 						<li>
 							<a th:href="@{/logout}">
@@ -83,6 +90,12 @@
 					<!-- viewType == 'entity' - показываем форму редактирования сущности -->
 					<div th:if="${viewType == 'entity'}">
 						<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
+						</div>
+					</div>
+					
+					<!-- viewType == 'undo' - показываем список откатываемых операций -->
+					<div th:if="${viewType == 'undo'}">
+						<div th:replace="operations-log :: operationsLog">
 						</div>
 					</div>
 					
