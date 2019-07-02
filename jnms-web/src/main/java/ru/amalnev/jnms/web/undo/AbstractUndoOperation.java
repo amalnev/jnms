@@ -20,7 +20,7 @@ public abstract class AbstractUndoOperation implements UndoOperation, Applicatio
 
     public String toString()
     {
-        if(entity == null) return super.toString();
+        if (entity == null) return super.toString();
 
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Model object of type ");

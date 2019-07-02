@@ -15,7 +15,6 @@ import ru.amalnev.jnms.common.repositories.IAuthorityRepository;
 import ru.amalnev.jnms.common.repositories.IUserRepository;
 import ru.amalnev.jnms.common.repositories.IUserRoleRepository;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 

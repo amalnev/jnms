@@ -63,7 +63,7 @@ public class UserController implements ApplicationContextAware
         final String requestedAction = request.getParameterMap().get("action")[0];
         if (requestedAction.equals("Save"))
         {
-            if(user.getId() == null) user.setId(-1L);
+            if (user.getId() == null) user.setId(-1L);
             final User existingUser = securityService.findUserById(user.getId()).orElse(new User());
             existingUser.setUsername(user.getUsername());
             if (user.getPassword() != null && !user.getPassword().isEmpty())
@@ -71,7 +71,7 @@ public class UserController implements ApplicationContextAware
                 existingUser.setPassword(user.getPassword());
             }
 
-            if(pictureFile != null && !pictureFile.isEmpty())
+            if (pictureFile != null && !pictureFile.isEmpty())
             {
                 existingUser.setPicture(pictureFile.getBytes());
             }
@@ -89,15 +89,15 @@ public class UserController implements ApplicationContextAware
     {
         try
         {
-            if(userId == null) throw new Exception();
+            if (userId == null) throw new Exception();
             final User user = securityService.findUserById(userId).orElse(null);
-            if(user == null || user.getPicture() == null || user.getPicture().length == 0) throw new Exception();
+            if (user == null || user.getPicture() == null || user.getPicture().length == 0) throw new Exception();
 
             response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
             response.getOutputStream().write(user.getPicture());
             response.getOutputStream().close();
         }
-        catch(final Exception e)
+        catch (final Exception e)
         {
             //возвращаем картинку по умолчанию
             final Resource defaultImageResource = new ClassPathResource("static/assets/img/default-user.png");
