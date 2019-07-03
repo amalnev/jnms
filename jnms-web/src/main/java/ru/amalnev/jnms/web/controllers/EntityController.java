@@ -41,6 +41,9 @@ public class EntityController implements ApplicationContextAware
     @Setter(onMethod = @__({@Autowired}))
     private SmartValidator validator;
 
+//    @Setter(onMethod = @__({@Autowired}))
+//    private UndoOperationsStack undoOperations;
+
     /**
      * Готовит данные для отображения формы редактирования
      * одной отдельной сущности заданного класса. Класс и ID сущности
@@ -123,12 +126,20 @@ public class EntityController implements ApplicationContextAware
         //Находим в данных POST-запроса параметр id и по нему находим соответствующую сущность
         //или создаем новую
         AbstractEntity entity = null;
+        //UndoOperation undoOperation = null;
         if (request.getParameterMap().containsKey("id"))
         {
             final Long id = conversionService.convert(request.getParameterMap().get("id")[0], Long.class);
             if (id != null) entity = (AbstractEntity) repository.findById(id).orElse(null);
         }
-        if (entity == null) entity = entityClass.newInstance();
+
+        if (entity == null)
+        {
+            //Сущность с переданным в запросе id не была найдена в репозитории.
+            //Создаем новый экземпляр сущности
+            entity = entityClass.newInstance();
+
+        }
 
         //Парсим данные из POST-запроса и записываем значения в соответствующие поля сущности.
         //Если с какими-то полями будут возникать проблемы, то ошибки будем записывать в этот объект Errors

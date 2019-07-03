@@ -53,6 +53,11 @@ public class User extends AbstractEntity implements UserDetails
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     private Set<Authority> authorities;
 
+    @Lob
+    @Getter
+    @Setter
+    private byte[] picture;
+
     @Getter
     @Transient
     private final boolean accountNonExpired = true;

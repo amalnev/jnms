@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<!-- Фрагмент, который выводит содержимое стека откатываемых операций -->
+		<div th:fragment="operationsLog">
+			<table class="dataGrid">
+				
+				<!-- Выводим заголовок таблицы -->
+				<thead>
+					<tr>
+						<th> Operation </th>
+						<th> Actions </th>
+					</tr>
+				</thead>
+				
+				<!-- Выводим строки таблицы -->
+				<tbody>
+					<!-- Если стек откатываемых операций пустой, то выводим сообщение -->
+					<tr th:if="${@undoOperationsStack.isEmpty()}">
+						<td colspan="2"> No items available</td>
+					</tr>
+					
+					<!-- Если стек откатываемых операций не пустой, то выводим его содержимое -->
+					<tr th:each="operation, iterationStatus : ${@undoOperationsStack}">
+						<td>
+							<span th:text="${operation}"> Cell value</span>
+						<td>
+							
+						<!-- В каждую строку добавляем кнопку Undo, только в пос строке
+							 делаем эту кнопку активной -->
+						<td th:if="${iterationStatus.last}">
+							<form action="#" th:action="@{/undo}" method="post">
+								<button type="submit">Undo</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

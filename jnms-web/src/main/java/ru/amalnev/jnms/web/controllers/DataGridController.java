@@ -44,7 +44,8 @@ public class DataGridController implements ApplicationContextAware
                           final @RequestParam String entityClassName) throws ClassNotFoundException
     {
         //Находим класс сущности по имени
-        final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
+        final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(
+                entityClassName);
 
         //Находим соответствующий репозиторий
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
@@ -67,14 +68,18 @@ public class DataGridController implements ApplicationContextAware
         uiModel.addAttribute("columnNames", columnNames);
 
         //Заполняем значения ячеек таблицы
-        repository.findAll().forEach((final Object entity) -> {
-            final List<String> values = new ArrayList<>();
-            columnValues.put(((AbstractEntity) entity).getId(), values);
-            displayFields.forEach(field -> {
-                final Object fieldValue = ReflectionUtils.runGetter(field, entity);
-                values.add(fieldValue == null ? "" : fieldValue.toString());
-            });
-        });
+        repository.findAll().forEach((final Object entity) ->
+                                     {
+                                         final List<String> values = new ArrayList<>();
+                                         columnValues.put(((AbstractEntity) entity).getId(), values);
+                                         displayFields.forEach(field ->
+                                                               {
+                                                                   final Object fieldValue = ReflectionUtils.runGetter(
+                                                                           field, entity);
+                                                                   values.add(
+                                                                           fieldValue == null ? "" : fieldValue.toString());
+                                                               });
+                                     });
 
         //Передаем полученные данные на front
         uiModel.addAttribute("columnValues", columnValues);
@@ -99,7 +104,8 @@ public class DataGridController implements ApplicationContextAware
                           final @RequestParam Long entityId) throws ClassNotFoundException
     {
         //Находим класс сущности по имени
-        final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(entityClassName);
+        final Class<? extends AbstractEntity> entityClass = (Class<? extends AbstractEntity>) Class.forName(
+                entityClassName);
 
         //Находим соответствующий репозиторий
         final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);

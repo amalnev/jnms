@@ -27,6 +27,16 @@
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
+						<!-- Выводим ссылку на страницу профиля пользователя -->
+						<li>
+							<form id="profileLink" action="#" th:action="@{/users/user}" method="get">
+								<input type="hidden" th:name="userId" th:value="${@securityService.getCurrentUser().getId()}"/>
+								<a href="#" onclick="getElementById('profileLink').submit();">
+									<span class="icon solid fa-user">Profile</span>
+								</a>
+							</form>
+						</li>
+						
 						<!-- Если текущий пользователь обладает максимальными правами, то даем ему ссылку на
 						 	 CRUD-формы сущности User -->
 						<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
@@ -42,10 +52,17 @@
 							</a>
 						</li>
 						
+						<!-- Выводим ссылку на страницу списка откатываемых операций -->
+						<li>
+							<a th:href="@{/undo}">
+								<span class="icon solid fa-th">Operations log</span>
+							</a>
+						</li>
+						
 						<!-- Выводим ссылку Logout -->
 						<li>
 							<a th:href="@{/logout}">
-								<span class="icon solid fa-th">Sign out</span>
+								<span class="icon solid fa-th" th:text="'Sign out (' + ${@securityService.getCurrentUser().getUsername()} + ')'"></span>
 							</a>
 						</li>
 					</ul>
@@ -73,6 +90,12 @@
 					<!-- viewType == 'entity' - показываем форму редактирования сущности -->
 					<div th:if="${viewType == 'entity'}">
 						<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
+						</div>
+					</div>
+					
+					<!-- viewType == 'undo' - показываем список откатываемых операций -->
+					<div th:if="${viewType == 'undo'}">
+						<div th:replace="operations-log :: operationsLog">
 						</div>
 					</div>
 					

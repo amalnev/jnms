@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="amalnev (generated)" id="1561373236882-1">
+        <createTable tableName="Authority">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="userRole_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-2">
+        <createTable tableName="Device">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="oamIp" type="VARCHAR(255)"/>
+            <column name="serialNumber" type="VARCHAR(255)"/>
+            <column name="site_id" type="BIGINT"/>
+            <column name="type_id" type="BIGINT"/>
+            <column name="vendor_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-3">
+        <createTable tableName="DeviceType">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-4">
+        <createTable tableName="Site">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="latitude" type="DOUBLE"/>
+            <column name="longitude" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-5">
+        <createTable tableName="User">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-6">
+        <createTable tableName="UserRole">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="privilegeLevel" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-7">
+        <createTable tableName="Vendor">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-8">
+        <createIndex indexName="FK3gwo0f4ce93u1nk61pip5kuv5" tableName="Device">
+            <column name="vendor_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-9">
+        <createIndex indexName="FK689fxrbpoleugb6603vx3hqdc" tableName="Device">
+            <column name="type_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-10">
+        <createIndex indexName="FKggtjnanooy3eheae07rgmbdyu" tableName="Device">
+            <column name="site_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-11">
+        <createIndex indexName="FKprqhys0any81dvlhojdd3gg73" tableName="Authority">
+            <column name="userRole_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-12">
+        <createIndex indexName="FKt4xgqapa2sbud8t05vt53keac" tableName="Authority">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-13">
+        <addForeignKeyConstraint baseColumnNames="vendor_id" baseTableName="Device" constraintName="FK3gwo0f4ce93u1nk61pip5kuv5" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="Vendor"/>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-14">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="Device" constraintName="FK689fxrbpoleugb6603vx3hqdc" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="DeviceType"/>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-15">
+        <addForeignKeyConstraint baseColumnNames="site_id" baseTableName="Device" constraintName="FKggtjnanooy3eheae07rgmbdyu" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="Site"/>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-16">
+        <addForeignKeyConstraint baseColumnNames="userRole_id" baseTableName="Authority" constraintName="FKprqhys0any81dvlhojdd3gg73" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="UserRole"/>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-17">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="Authority" constraintName="FKt4xgqapa2sbud8t05vt53keac" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="User"/>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-18">
+        <insert tableName="User">
+            <column name="id" value="1" />
+            <column name="username" value="root" />
+            <column name="password" value="$2a$10$dwmvqHT9Xr69sTKkoU8af.EPRgB7s49.SEjuqgK8QFo.PiWzqKUrq" />
+        </insert>
+        <insert tableName="UserRole">
+            <column name="id" value="1" />
+            <column name="name" value="ROLE_ROOT" />
+            <column name="privilegeLevel" value="15" />
+        </insert>
+        <insert tableName="Authority">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1" />
+            <column name="userRole_id" value="1" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

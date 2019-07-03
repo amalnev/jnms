@@ -5,10 +5,15 @@
 	</head>
 	<body>
 		<div th:fragment="userForm(user)">
-			<form action="#" th:object="${user}" th:action="@{/users/save}" method="post" id="userForm">
+			<form action="#" th:object="${user}" th:action="@{/users/save}" method="post" id="userForm" enctype="multipart/form-data">
 				<input type="hidden" th:field="*{id}" th:value="${user.id}"/>
 				<table class="entityForm">
 					<tbody>
+						<tr>
+							<td colspan="2">
+								<img width="200" height="200" th:src="@{/users/image(userId=${user.id})}">
+							</td>
+						</tr>
 						<tr>
 							<td>Username:</td>
 							<td><input type="text" th:field="*{username}" th:value="${user.username}"/></td>
@@ -34,6 +39,10 @@
 						<tr>
 							<td>Assigned authorities</td>
 							<td><span th:text="${user.authorities}"></span></td>
+						</tr>
+						<tr>
+							<td>Picture</td>
+							<td><input type="file" name="pictureFile" accept="image/png,image/gif,image/jpeg"/></td>
 						</tr>
 					</tbody>
 				</table>
