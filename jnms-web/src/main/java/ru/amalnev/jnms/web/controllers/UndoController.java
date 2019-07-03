@@ -2,8 +2,6 @@ package ru.amalnev.jnms.web.controllers;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +16,8 @@ import ru.amalnev.jnms.web.undo.UndoOperationsStack;
  */
 @Controller
 @RequestMapping("/undo")
-public class UndoController implements ApplicationContextAware
+public class UndoController
 {
-    @Setter
-    private ApplicationContext applicationContext;
-
     @Setter(onMethod = @__({@Autowired}))
     private UndoOperationsStack undoOperations;
 
@@ -30,7 +25,6 @@ public class UndoController implements ApplicationContextAware
     private String showOperations(final Model uiModel)
     {
         uiModel.addAttribute("viewType", "undo");
-        uiModel.addAttribute("springContext", applicationContext);
         return "main-view";
     }
 

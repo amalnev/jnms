@@ -1,12 +1,17 @@
-package ru.amalnev.jnms.common.utilities;
+package ru.amalnev.jnms.common.model;
 
 import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.repository.CrudRepository;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.entities.DisplayName;
-import ru.amalnev.jnms.common.entities.MinPrivilege;
-import ru.amalnev.jnms.common.repositories.EntityClass;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
+import ru.amalnev.jnms.common.model.entities.DisplayName;
+import ru.amalnev.jnms.common.model.entities.MinPrivilege;
+import ru.amalnev.jnms.common.model.repositories.EntityClass;
 import ru.amalnev.jnms.common.services.SecurityService;
 
 import javax.persistence.ManyToOne;
@@ -18,52 +23,58 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Класс-котейнер для статических утилит, в основном касающихся работы с
- * репозиториями и сущностями через рефлексию
- *
- * @author Aleksei Malnev
+ * После полной инициализации контекста (когда все бины проинициализированы и готовы к работе),
+ * контекст генерирует событие ContextRefreshedEvent. Здесь мы слушаем это событие и в момент
+ * его появления анализируем какие репозитории есть в контексте, за какие сущности они отвечают,
+ * какие их поля нужно вытаскивать в UI и т.д. Эта информация запоминается и впоследствии
+ * используется для создания "обобщенного" CRUD-UI, способного работать со всеми найденными
+ * сущностями.
  */
-public class ReflectionUtils
+public class ModelAnalyzer implements ApplicationListener<ContextRefreshedEvent>
 {
-    /**
-     * Находит класс сущности по бину репозитория.
-     *
-     * @param repositoryBean Spring Data репозиторий
-     * @return Класс сущностей, содержащихся в данном репозитории
-     */
-    private static Class getEntityClass(final Object repositoryBean)
+    @Autowired
+    private ConfigurableListableBeanFactory beanFactory;
+
+    @Autowired
+    private SecurityService securityService;
+
+    private Map<Class<? extends AbstractEntity>, CrudRepository> repositoryMap = new HashMap<>();
+
+    @Override
+    public void onApplicationEvent(final ContextRefreshedEvent contextRefreshedEvent)
     {
-        for (final Class<?> interfaceClass : AopProxyUtils.proxiedUserInterfaces(repositoryBean))
+        final ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
+        for (final String beanName : applicationContext.getBeanDefinitionNames())
         {
-            final EntityClass entityClassAnnotation = interfaceClass.getAnnotation(EntityClass.class);
-            if (entityClassAnnotation != null) return entityClassAnnotation.value();
+            final BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+            final String beanScope = beanDefinition.getScope();
+
+            if (beanScope == null || beanScope.equals("prototype") || beanScope.equals("session"))
+                continue;
+
+            final Object bean = applicationContext.getBean(beanName);
+            if (bean instanceof CrudRepository)
+            {
+                for (final Class<?> interfaceClass : AopProxyUtils.proxiedUserInterfaces(bean))
+                {
+                    final EntityClass entityClassAnnotation = interfaceClass.getAnnotation(EntityClass.class);
+                    if (entityClassAnnotation != null)
+                        repositoryMap.put(entityClassAnnotation.value(), (CrudRepository) bean);
+                }
+            }
         }
 
-        return null;
     }
 
     /**
      * Возвращает Spring Data репозиторий, содержащий сущности заданного класса.
      *
-     * @param springContext Spring application context
-     * @param entityClass   Класс сущности, для которого нужно найти репозиторий
+     * @param entityClass Класс сущности, для которого нужно найти репозиторий
      * @return Бин репозитория, содержащий сущности заданного класса.
      */
-    public static CrudRepository getRepositoryByEntityClass(final ApplicationContext springContext,
-                                                            final Class<? extends AbstractEntity> entityClass)
+    public CrudRepository getRepositoryByEntityClass(final Class<? extends AbstractEntity> entityClass)
     {
-        for (final String beanName : springContext.getBeanDefinitionNames())
-        {
-            final Object beanInstance = springContext.getBean(beanName);
-            if (beanInstance == null) continue;
-            if (beanInstance instanceof CrudRepository &&
-                    ReflectionUtils.getEntityClass(beanInstance).equals(entityClass))
-            {
-                return (CrudRepository) beanInstance;
-            }
-        }
-
-        return null;
+        return repositoryMap.get(entityClass);
     }
 
     /**
@@ -73,40 +84,30 @@ public class ReflectionUtils
      * класс сущности, значением - атрибут value() аннотации @DisplayName. Возвращаемый результат отсортирован в
      * соответствии с атрибутом orderOfAppearance аннотации @DisplayName.
      *
-     * @param springContext Spring application context
      * @return Коллекция классов сущностей, с которыми может работать текущий пользователь
      */
-    public static Map<Class<? extends AbstractEntity>, String> getDisplayableEntities(final ApplicationContext springContext)
+    public Map<Class<? extends AbstractEntity>, String> getDisplayableEntities()
     {
         List<Class<? extends AbstractEntity>> resultList = new ArrayList<>();
         Map<Class<? extends AbstractEntity>, String> result = new LinkedHashMap<>();
-        for (final String beanName : springContext.getBeanDefinitionNames())
+        for (final Class<? extends AbstractEntity> entityClass : repositoryMap.keySet())
         {
-            final Object beanInstance = springContext.getBean(beanName);
-            if (beanInstance == null) continue;
-            if (beanInstance instanceof CrudRepository)
+            if (entityClass.isAnnotationPresent(DisplayName.class))
             {
-                final Class<? extends AbstractEntity> entityClass = getEntityClass(beanInstance);
-                if (entityClass == null) continue;
-
-                if (entityClass.isAnnotationPresent(DisplayName.class))
+                if (entityClass.isAnnotationPresent(MinPrivilege.class))
                 {
-                    final SecurityService securityService = (SecurityService) springContext.getBean(
-                            SecurityService.class);
-                    if (entityClass.isAnnotationPresent(MinPrivilege.class))
-                    {
-                        if (securityService.getCurrentPrivilegeLevel() >= entityClass.getAnnotation(
-                                MinPrivilege.class).value())
-                        {
-                            resultList.add(entityClass);
-                        }
-                    }
-                    else
+                    if (securityService.getCurrentPrivilegeLevel() >= entityClass.getAnnotation(
+                            MinPrivilege.class).value())
                     {
                         resultList.add(entityClass);
                     }
                 }
+                else
+                {
+                    resultList.add(entityClass);
+                }
             }
+
         }
 
         Collections.sort(resultList,
@@ -125,7 +126,7 @@ public class ReflectionUtils
      * @return Список отображаемых полей для запрошенного класса.
      * @DisplayName
      */
-    public static List<Field> getDisplayableFields(final Class<? extends AbstractEntity> entityClass)
+    public List<Field> getDisplayableFields(final Class<? extends AbstractEntity> entityClass)
     {
         return getFields(entityClass).stream()
                 .filter(field -> isDisplayableField(field))
@@ -142,9 +143,9 @@ public class ReflectionUtils
      * @param value  Новое значение
      * @throws IllegalAccessException
      */
-    public static void setFieldValue(final Field field,
-                                     final Object target,
-                                     final Object value) throws IllegalAccessException
+    public void setFieldValue(final Field field,
+                              final Object target,
+                              final Object value) throws IllegalAccessException
     {
         boolean accessible = field.isAccessible();
         field.setAccessible(true);
@@ -152,7 +153,7 @@ public class ReflectionUtils
         field.setAccessible(accessible);
     }
 
-    private static List<Field> getFields(List<Field> fields, Class<?> type)
+    private List<Field> getFields(List<Field> fields, Class<?> type)
     {
         fields.addAll(Arrays.asList(type.getDeclaredFields()));
 
@@ -170,7 +171,7 @@ public class ReflectionUtils
      * @param type Класс, для которого нужно собрать поля.
      * @return Список полей запрошенного класса и его предков.
      */
-    public static List<Field> getFields(Class<?> type)
+    public List<Field> getFields(Class<?> type)
     {
         final List<Field> fields = new ArrayList<>();
         return getFields(fields, type);
@@ -184,7 +185,7 @@ public class ReflectionUtils
      * @param o     Объект, для которого нужно получить значение поля
      * @return Значение поля.
      */
-    public static Object runGetter(Field field, Object o)
+    public Object runGetter(Field field, Object o)
     {
         for (Method method : o.getClass().getMethods())
         {
@@ -196,11 +197,7 @@ public class ReflectionUtils
                     {
                         return method.invoke(o);
                     }
-                    catch (IllegalAccessException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    catch (InvocationTargetException e)
+                    catch (IllegalAccessException | InvocationTargetException e)
                     {
                         e.printStackTrace();
                     }
@@ -217,7 +214,7 @@ public class ReflectionUtils
      * @param field Поле, которое нужно проверить
      * @return true, если заданное поле помечено аннотацией @DisplayName
      */
-    public static boolean isDisplayableField(final Field field)
+    public boolean isDisplayableField(final Field field)
     {
         return field.isAnnotationPresent(DisplayName.class);
     }
@@ -228,7 +225,7 @@ public class ReflectionUtils
      * @param field
      * @return
      */
-    public static String getDisplayName(final Field field)
+    public String getDisplayName(final Field field)
     {
         return field.getAnnotation(DisplayName.class).value();
     }
@@ -239,7 +236,7 @@ public class ReflectionUtils
      * @param field Поле, которое нужно проверить
      * @return true, если заданное поле помечено аннотацией @OneToMany
      */
-    public static boolean isOneToManyReference(final Field field)
+    public boolean isOneToManyReference(final Field field)
     {
         return field.isAnnotationPresent(OneToMany.class);
     }
@@ -250,7 +247,7 @@ public class ReflectionUtils
      * @param field Поле, которое нужно проверить
      * @return true, если заданное поле помечено аннотацией @ManyToOne
      */
-    public static boolean isManyToOneReference(final Field field)
+    public boolean isManyToOneReference(final Field field)
     {
         return field.isAnnotationPresent(ManyToOne.class);
     }
@@ -262,7 +259,7 @@ public class ReflectionUtils
      * @param field Поле, которое нужно проверить
      * @return
      */
-    public static boolean isOrdinaryDataField(final Field field)
+    public boolean isOrdinaryDataField(final Field field)
     {
         return !isManyToOneReference(field) && !isOneToManyReference(field) &&
                 isDisplayableField(field);
@@ -275,7 +272,7 @@ public class ReflectionUtils
      * @param field
      * @return
      */
-    public static boolean isDisabledField(final Field field)
+    public boolean isDisabledField(final Field field)
     {
         if (isDisplayableField(field))
         {

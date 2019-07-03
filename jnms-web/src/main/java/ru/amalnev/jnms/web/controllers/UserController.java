@@ -2,15 +2,13 @@ package ru.amalnev.jnms.web.controllers;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.amalnev.jnms.common.entities.security.User;
+import ru.amalnev.jnms.common.model.entities.security.User;
 import ru.amalnev.jnms.common.services.SecurityService;
 import ru.amalnev.jnms.web.constants.Constants;
 
@@ -21,18 +19,14 @@ import java.io.InputStream;
 
 @Controller
 @RequestMapping("/users")
-public class UserController implements ApplicationContextAware
+public class UserController
 {
-    @Setter
-    private ApplicationContext applicationContext;
-
     @Setter(onMethod = @__({@Autowired}))
     private SecurityService securityService;
 
     @GetMapping
     private String show(final Model uiModel)
     {
-        uiModel.addAttribute("springContext", applicationContext);
         uiModel.addAttribute("viewType", "userGrid");
         uiModel.addAttribute("users", securityService.findAllUsers());
 
@@ -45,7 +39,6 @@ public class UserController implements ApplicationContextAware
     {
         final User user = securityService.findUserById(userId).orElse(new User());
 
-        uiModel.addAttribute("springContext", applicationContext);
         uiModel.addAttribute("viewType", "userForm");
         uiModel.addAttribute("user", user);
 

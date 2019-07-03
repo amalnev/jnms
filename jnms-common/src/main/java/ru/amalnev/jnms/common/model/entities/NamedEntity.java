@@ -1,4 +1,4 @@
-package ru.amalnev.jnms.common.entities;
+package ru.amalnev.jnms.common.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

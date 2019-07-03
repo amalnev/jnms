@@ -1,6 +1,6 @@
-package ru.amalnev.jnms.common.repositories;
+package ru.amalnev.jnms.common.model.repositories;
 
-import ru.amalnev.jnms.common.entities.AbstractEntity;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
 import java.lang.annotation.*;
 

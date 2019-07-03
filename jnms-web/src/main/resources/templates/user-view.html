@@ -5,7 +5,8 @@
 	</head>
 	<body>
 		<div th:fragment="userForm(user)">
-			<form action="#" th:object="${user}" th:action="@{/users/save}" method="post" id="userForm" enctype="multipart/form-data">
+			<form action="#" th:object="${user}" th:action="@{/users/save}" method="post" id="userForm"
+				  enctype="multipart/form-data">
 				<input type="hidden" th:field="*{id}" th:value="${user.id}"/>
 				<table class="entityForm">
 					<tbody>
@@ -32,7 +33,8 @@
 						<tr>
 							<td>Confirm password</td>
 							<td>
-								<input type="password" id="passwordConfirmationField" th:field="*{passwordConfirmation}" disabled/>
+								<input type="password" id="passwordConfirmationField" th:field="*{passwordConfirmation}"
+									   disabled/>
 								<span id="errorBox"></span>
 							</td>
 						</tr>

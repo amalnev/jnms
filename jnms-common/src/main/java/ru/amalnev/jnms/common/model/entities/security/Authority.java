@@ -1,13 +1,13 @@
-package ru.amalnev.jnms.common.entities.security;
+package ru.amalnev.jnms.common.model.entities.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.entities.DisplayName;
-import ru.amalnev.jnms.common.entities.MinPrivilege;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
+import ru.amalnev.jnms.common.model.entities.DisplayName;
+import ru.amalnev.jnms.common.model.entities.MinPrivilege;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

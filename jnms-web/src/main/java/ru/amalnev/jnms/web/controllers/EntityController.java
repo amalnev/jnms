@@ -2,8 +2,6 @@ package ru.amalnev.jnms.web.controllers;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
@@ -15,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.utilities.ReflectionUtils;
+import ru.amalnev.jnms.common.model.ModelAnalyzer;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 import ru.amalnev.jnms.web.constants.Constants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,19 +28,16 @@ import java.lang.reflect.Field;
  */
 @Controller
 @RequestMapping("/entity")
-public class EntityController implements ApplicationContextAware
+public class EntityController
 {
-    @Setter
-    private ApplicationContext applicationContext;
-
     @Setter(onMethod = @__({@Autowired}))
     private ConversionService conversionService;
 
     @Setter(onMethod = @__({@Autowired}))
     private SmartValidator validator;
 
-//    @Setter(onMethod = @__({@Autowired}))
-//    private UndoOperationsStack undoOperations;
+    @Setter(onMethod = @__({@Autowired}))
+    private ModelAnalyzer modelAnalyzer;
 
     /**
      * Готовит данные для отображения формы редактирования
@@ -71,7 +66,7 @@ public class EntityController implements ApplicationContextAware
                 entityClassName);
 
         //Находим соответствующий репозиторий
-        final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
+        final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
 
         //Находим сущность с запрошенным ID или создаем новую
         final AbstractEntity entity = entityId != null ?
@@ -81,7 +76,6 @@ public class EntityController implements ApplicationContextAware
         //Передаем необходимые данные на front
         uiModel.addAttribute("viewType", "entity");
         uiModel.addAttribute("entity", entity);
-        uiModel.addAttribute("springContext", applicationContext);
 
         return Constants.MAIN_VIEW;
     }
@@ -121,7 +115,7 @@ public class EntityController implements ApplicationContextAware
                 entityClassName);
 
         //Находим соответствующий репозиторий
-        final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
+        final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
 
         //Находим в данных POST-запроса параметр id и по нему находим соответствующую сущность
         //или создаем новую
@@ -149,7 +143,7 @@ public class EntityController implements ApplicationContextAware
             try
             {
                 //Находим поле сущности по имени параметра из POST-запроса
-                final Field entityField = ReflectionUtils.getFields(entity.getClass()).stream()
+                final Field entityField = modelAnalyzer.getFields(entity.getClass()).stream()
                         .filter(field -> field.getName().equals(fieldName))
                         .findFirst().orElse(null);
 
@@ -161,7 +155,7 @@ public class EntityController implements ApplicationContextAware
                 //Если строка null или пустая - пропускаем это поле
                 if (fieldValue == null || fieldValue.length() == 0) continue;
 
-                if (ReflectionUtils.isManyToOneReference(entityField))
+                if (modelAnalyzer.isManyToOneReference(entityField))
                 {
                     //Если поле является ссылкой @ManyToOne, то строка fieldValue содержит ID сущности
                     //из другого репозитория, на которую идет ссылка.
@@ -170,14 +164,13 @@ public class EntityController implements ApplicationContextAware
                     final Long referencedObjectId = conversionService.convert(fieldValue, Long.class);
 
                     //Находим "чужую" сущность в соответствующем репозитории по ID
-                    final AbstractEntity referencedObject = (AbstractEntity) ReflectionUtils
-                            .getRepositoryByEntityClass(applicationContext,
-                                                        (Class<? extends AbstractEntity>) entityField.getType())
+                    final AbstractEntity referencedObject = (AbstractEntity) modelAnalyzer
+                            .getRepositoryByEntityClass((Class<? extends AbstractEntity>) entityField.getType())
                             .findById(referencedObjectId)
                             .orElse(null);
 
                     //Записываем найденную "чужую" сущность в качестве значения поля
-                    ReflectionUtils.setFieldValue(entityField, entity, referencedObject);
+                    modelAnalyzer.setFieldValue(entityField, entity, referencedObject);
                 }
                 else
                 {
@@ -186,8 +179,8 @@ public class EntityController implements ApplicationContextAware
                     try
                     {
                         //Конвертируем значение поля из строки в соответствующий тип, устанавливаем новое значение
-                        ReflectionUtils.setFieldValue(entityField, entity,
-                                                      conversionService.convert(fieldValue, entityField.getType()));
+                        modelAnalyzer.setFieldValue(entityField, entity,
+                                                    conversionService.convert(fieldValue, entityField.getType()));
                     }
                     catch (final Exception e)
                     {

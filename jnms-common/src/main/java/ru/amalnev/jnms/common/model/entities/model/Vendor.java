@@ -1,9 +1,9 @@
-package ru.amalnev.jnms.common.entities.model;
+package ru.amalnev.jnms.common.model.entities.model;
 
 import lombok.Getter;
-import ru.amalnev.jnms.common.entities.DisplayName;
-import ru.amalnev.jnms.common.entities.MinPrivilege;
-import ru.amalnev.jnms.common.entities.NamedEntity;
+import ru.amalnev.jnms.common.model.entities.DisplayName;
+import ru.amalnev.jnms.common.model.entities.MinPrivilege;
+import ru.amalnev.jnms.common.model.entities.NamedEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

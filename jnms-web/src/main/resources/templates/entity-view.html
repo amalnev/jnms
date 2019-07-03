@@ -6,9 +6,8 @@
 	<body>
 		<!-- Фрагмент, отвечающий за отрисовку формы редактирования одной сущности
 			 entity - объект сущности, который нужно отобразить в виде HTML-формы
-			 springContext - Spring application context
 		-->
-		<div th:fragment="entityForm(entity, springContext)">
+		<div th:fragment="entityForm(entity)">
 			<form action="#" th:action="@{/entity/save}" method="post">
 				<!-- Скрытое поле, которое добавит в POST-запрос имя класса сущности -->
 				<input type="hidden" th:name="entityClassName" th:value="${entity.getClass().getName()}"/>
@@ -18,11 +17,11 @@
 					<tbody>
 						
 						<!-- Выводим все отображаемые (отмеченные аннотацией @DisplayName) поля заданной сущности -->
-						<tr th:each="entityField : ${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).getDisplayableFields(entity.getClass())}">
+						<tr th:each="entityField : ${@modelAnalyzer.getDisplayableFields(entity.getClass())}">
 							
 							<!-- Выводим подпись (значение атрибута value() аннотации @DisplayName) -->
 							<td>
-								<span th:text="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).getDisplayName(entityField)}">
+								<span th:text="${@modelAnalyzer.getDisplayName(entityField)}">
 									FIELD NAME
 								</span>
 							</td>
@@ -32,30 +31,32 @@
 								<!-- Если данное поле является "обычным" полем данных (не ссылкой на другие сущности),
 								 	 то выводим простое текстовое поле-->
 								<input type="text"
-									   th:value="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).runGetter(entityField, entity)}"
-									   th:if="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).isOrdinaryDataField(entityField)}"
+									   th:value="${@modelAnalyzer.runGetter(entityField, entity)}"
+									   th:if="${@modelAnalyzer.isOrdinaryDataField(entityField)}"
 									   th:name="${entityField.getName()}"
-									   th:readonly="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).isDisabledField(entityField)}"
+									   th:readonly="${@modelAnalyzer.isDisabledField(entityField)}"
 								/>
 								
 								<!-- Если данное поле является ссылкой @OneToMany, то выводим список сущностей без возможности редактирования -->
-								<span th:if="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).isOneToManyReference(entityField)}"
-									  th:text="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).runGetter(entityField, entity)}">
+								<span th:if="${@modelAnalyzer.isOneToManyReference(entityField)}"
+									  th:text="${@modelAnalyzer.runGetter(entityField, entity)}">
 								</span>
 								
 								<!-- Если данное поле является ссылкой @ManyToOne, то выводим drop-down, позволяющий выбрать
 									 одно из существующих значений -->
-								<select th:if="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).isManyToOneReference(entityField)}"
+								<select th:if="${@modelAnalyzer.isManyToOneReference(entityField)}"
 										th:name="${entityField.getName()}">
-									<option th:each="referencedEntity : ${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).getRepositoryByEntityClass(springContext, entityField.getType()).findAll()}"
-											th:selected="${T(ru.amalnev.jnms.common.utilities.ReflectionUtils).runGetter(entityField, entity) == null ? false : referencedEntity.getId().equals(T(ru.amalnev.jnms.common.utilities.ReflectionUtils).runGetter(entityField, entity).getId())}"
+									<option th:each="referencedEntity : ${@modelAnalyzer.getRepositoryByEntityClass(entityField.getType()).findAll()}"
+											th:selected="${@modelAnalyzer.runGetter(entityField, entity) == null ? false : referencedEntity.getId().equals(@modelAnalyzer.runGetter(entityField, entity).getId())}"
 											th:text="${referencedEntity.toString()}"
 											th:value="${referencedEntity.getId()}">
 									</option>
 								</select>
 								
 								<!-- Если данное поле содержит ошибку, то выводим ее -->
-								<span class="fieldError" th:if="${errors != null && errors.getFieldError(entityField.getName()) != null}" th:text="${errors.getFieldError(entityField.getName()).getDefaultMessage()}">
+								<span class="fieldError"
+									  th:if="${errors != null && errors.getFieldError(entityField.getName()) != null}"
+									  th:text="${errors.getFieldError(entityField.getName()).getDefaultMessage()}">
 								</span>
 							</td>
 						</tr>

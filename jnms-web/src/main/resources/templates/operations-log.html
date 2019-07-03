@@ -11,8 +11,8 @@
 				<!-- Выводим заголовок таблицы -->
 				<thead>
 					<tr>
-						<th> Operation </th>
-						<th> Actions </th>
+						<th> Operation</th>
+						<th> Actions</th>
 					</tr>
 				</thead>
 				
@@ -29,8 +29,8 @@
 							<span th:text="${operation}"> Cell value</span>
 						<td>
 							
-						<!-- В каждую строку добавляем кнопку Undo, только в пос строке
-							 делаем эту кнопку активной -->
+							<!-- В каждую строку добавляем кнопку Undo, только в пос строке
+								 делаем эту кнопку активной -->
 						<td th:if="${iterationStatus.last}">
 							<form action="#" th:action="@{/undo}" method="post">
 								<button type="submit">Undo</button>

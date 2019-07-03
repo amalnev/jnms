@@ -10,8 +10,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.utilities.ReflectionUtils;
+import ru.amalnev.jnms.common.model.ModelAnalyzer;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
 @Aspect
 @Component
@@ -21,9 +21,12 @@ public class CrudAspect implements ApplicationContextAware
     private ApplicationContext applicationContext;
 
     @Setter(onMethod = @__({@Autowired}))
+    private ModelAnalyzer modelAnalyzer;
+
+    @Setter(onMethod = @__({@Autowired}))
     private UndoOperationsStack undoOperations;
 
-    @Pointcut("execution(* ru.amalnev.jnms.common.repositories.*.save(..))")
+    @Pointcut("execution(* ru.amalnev.jnms.common.model.repositories.*.save(..))")
     public void saveMethodInsideACrudRepository()
     {
     }
@@ -40,15 +43,14 @@ public class CrudAspect implements ApplicationContextAware
         {
             //Это новая сущность, будет сохраняться с помощью INSERT, создаем соответствующую операцию отмены
             undoOperation = applicationContext.getBean(UndoCreate.class);
+            System.out.println("UNDO OP:" + undoOperation.hashCode());
         }
         else
         {
             //Это скорее всего существующая сущность, проверим это.
 
             //Находим соответствующий репозиторий
-            final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(
-                    applicationContext,
-                    newEntityState.getClass());
+            final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(newEntityState.getClass());
 
             //Вытаскиваем из БД текущее состояние данной сущности (до UPDATE)
             final AbstractEntity existingEntityState = (AbstractEntity) repository.findById(
@@ -57,6 +59,7 @@ public class CrudAspect implements ApplicationContextAware
             {
                 //Это новая сущность, будет сохраняться с помощью INSERT, создаем соответствующую операцию отмены
                 undoOperation = applicationContext.getBean(UndoCreate.class);
+                System.out.println("UNDO OP:" + undoOperation.hashCode());
             }
             else
             {

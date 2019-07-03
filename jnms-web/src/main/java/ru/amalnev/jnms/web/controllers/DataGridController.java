@@ -1,17 +1,16 @@
 package ru.amalnev.jnms.web.controllers;
 
 import lombok.Setter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.entities.DisplayName;
-import ru.amalnev.jnms.common.utilities.ReflectionUtils;
+import ru.amalnev.jnms.common.model.ModelAnalyzer;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
+import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.web.constants.Constants;
 
 import java.lang.reflect.Field;
@@ -26,10 +25,10 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/grid")
-public class DataGridController implements ApplicationContextAware
+public class DataGridController
 {
-    @Setter
-    private ApplicationContext applicationContext;
+    @Setter(onMethod = @__({@Autowired}))
+    private ModelAnalyzer modelAnalyzer;
 
     /**
      * Готовит данные для отображения HTML-таблицы, содержащей список сущностей заданного типа
@@ -48,7 +47,7 @@ public class DataGridController implements ApplicationContextAware
                 entityClassName);
 
         //Находим соответствующий репозиторий
-        final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
+        final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
 
         //Этот список будет содержать имена колонок в таблице
         final List<String> columnNames = new ArrayList<>();
@@ -58,7 +57,7 @@ public class DataGridController implements ApplicationContextAware
 
         //Получаем список отображаемых полей сущности, сортируем его в соответствии со значением
         //атрибута orderOfAppearance аннотации @DisplayName
-        List<Field> displayFields = ReflectionUtils.getFields(entityClass).stream()
+        List<Field> displayFields = modelAnalyzer.getFields(entityClass).stream()
                 .filter(field -> field.isAnnotationPresent(DisplayName.class))
                 .sorted(Comparator.comparingInt(field -> field.getAnnotation(DisplayName.class).orderOfAppearance()))
                 .collect(Collectors.toList());
@@ -74,7 +73,7 @@ public class DataGridController implements ApplicationContextAware
                                          columnValues.put(((AbstractEntity) entity).getId(), values);
                                          displayFields.forEach(field ->
                                                                {
-                                                                   final Object fieldValue = ReflectionUtils.runGetter(
+                                                                   final Object fieldValue = modelAnalyzer.runGetter(
                                                                            field, entity);
                                                                    values.add(
                                                                            fieldValue == null ? "" : fieldValue.toString());
@@ -84,7 +83,6 @@ public class DataGridController implements ApplicationContextAware
         //Передаем полученные данные на front
         uiModel.addAttribute("columnValues", columnValues);
         uiModel.addAttribute("entityClassName", entityClassName);
-        uiModel.addAttribute("springContext", applicationContext);
         uiModel.addAttribute("viewType", "grid");
         return Constants.MAIN_VIEW;
     }
@@ -108,7 +106,7 @@ public class DataGridController implements ApplicationContextAware
                 entityClassName);
 
         //Находим соответствующий репозиторий
-        final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(applicationContext, entityClass);
+        final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
 
         //Производим удаление
         repository.deleteById(entityId);

@@ -1,4 +1,4 @@
-package ru.amalnev.jnms.common.entities;
+package ru.amalnev.jnms.common.model.entities;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

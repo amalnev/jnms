@@ -2,7 +2,7 @@ function onDocumentLoaded() {
     var changePasswordCheckbox = document.getElementById("changePasswordCheckbox");
     var saveButton = document.getElementById("saveButton");
 
-    if(changePasswordCheckbox != null) {
+    if (changePasswordCheckbox != null) {
         changePasswordCheckbox.addEventListener("click", function () {
             var checkBox = document.getElementById("changePasswordCheckbox");
             var passwordField = document.getElementById("passwordField");
@@ -18,7 +18,7 @@ function onDocumentLoaded() {
         });
     }
 
-    if(saveButton != null) {
+    if (saveButton != null) {
         saveButton.addEventListener("click", function () {
             var passwordField = document.getElementById("passwordField");
             var passwordConfirmationField = document.getElementById("passwordConfirmationField");

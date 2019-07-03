@@ -8,12 +8,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.amalnev.jnms.common.entities.security.Authority;
-import ru.amalnev.jnms.common.entities.security.User;
-import ru.amalnev.jnms.common.entities.security.UserRole;
-import ru.amalnev.jnms.common.repositories.IAuthorityRepository;
-import ru.amalnev.jnms.common.repositories.IUserRepository;
-import ru.amalnev.jnms.common.repositories.IUserRoleRepository;
+import ru.amalnev.jnms.common.model.entities.security.Authority;
+import ru.amalnev.jnms.common.model.entities.security.User;
+import ru.amalnev.jnms.common.model.entities.security.UserRole;
+import ru.amalnev.jnms.common.model.repositories.IAuthorityRepository;
+import ru.amalnev.jnms.common.model.repositories.IUserRepository;
+import ru.amalnev.jnms.common.model.repositories.IUserRoleRepository;
 
 import java.util.List;
 import java.util.Optional;
