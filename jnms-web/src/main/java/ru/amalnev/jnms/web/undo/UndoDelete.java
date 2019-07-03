@@ -8,7 +8,7 @@ import ru.amalnev.jnms.common.model.ModelAnalyzer;
 
 @Component
 @Scope("prototype")
-public class UndoCreate extends AbstractUndoOperation
+public class UndoDelete extends AbstractUndoOperation
 {
     @Autowired
     private ModelAnalyzer modelAnalyzer;
@@ -17,27 +17,29 @@ public class UndoCreate extends AbstractUndoOperation
     private CrudAspect aspect;
 
     @Override
+    protected String getOperationName()
+    {
+        return "deleted";
+    }
+
+    @Override
     public void undo()
     {
         try
         {
             aspect.setEnabled(false);
 
+            getEntity().setId(null);
+
             //Находим соответствующий репозиторий по классу сущности
             final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(getEntity().getClass());
 
-            //Удаляем сущность из репозитория
-            repository.deleteById(getEntity().getId());
+            //Создаем сущность в репозитории
+            repository.save(getEntity());
         }
         finally
         {
             aspect.setEnabled(true);
         }
-    }
-
-    @Override
-    protected String getOperationName()
-    {
-        return "created";
     }
 }

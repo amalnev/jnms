@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.web.undo;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,14 +27,38 @@ public class CrudAspect implements ApplicationContextAware
     @Setter(onMethod = @__({@Autowired}))
     private UndoOperationsStack undoOperations;
 
-    @Pointcut("execution(* ru.amalnev.jnms.common.model.repositories.*.save(..))")
-    public void saveMethodInsideACrudRepository()
+    @Getter
+    @Setter
+    private volatile boolean enabled = true;
+
+    @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.deleteById(..))")
+    public void beforeCrudDeleteOperation(final JoinPoint joinPoint)
     {
+        if(!enabled) return;
+
+        //Это id сущности, которая собирается удалиться из БД, нужно создать
+        //подходящую операцию отмены удаления
+        final Long id = (Long) joinPoint.getArgs()[0];
+
+        //Находим соответствующий репозиторий
+        final CrudRepository repository = (CrudRepository) joinPoint.getTarget();
+
+        if(repository == null) return;
+
+        //Вытаскиваем из БД текущее состояние данной сущности (до DELETE)
+        final AbstractEntity existingEntityState = (AbstractEntity) repository.findById(id).orElse(null);
+
+        final UndoOperation undoOperation = applicationContext.getBean(UndoDelete.class);
+        undoOperation.setEntity(existingEntityState);
+
+        undoOperations.add(undoOperation);
     }
 
-    @Before("saveMethodInsideACrudRepository()")
-    public void beforeCrudOperation(final JoinPoint joinPoint) throws CloneNotSupportedException
+    @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.save(..))")
+    public void beforeCrudSaveOperation(final JoinPoint joinPoint)
     {
+        if(!enabled) return;
+
         //Это сущность, которая собирается сохраниться в БД, нужно создать
         //подходящую операцию отмены сохранения
         final AbstractEntity newEntityState = (AbstractEntity) joinPoint.getArgs()[0];
@@ -43,7 +68,6 @@ public class CrudAspect implements ApplicationContextAware
         {
             //Это новая сущность, будет сохраняться с помощью INSERT, создаем соответствующую операцию отмены
             undoOperation = applicationContext.getBean(UndoCreate.class);
-            System.out.println("UNDO OP:" + undoOperation.hashCode());
         }
         else
         {
@@ -59,7 +83,6 @@ public class CrudAspect implements ApplicationContextAware
             {
                 //Это новая сущность, будет сохраняться с помощью INSERT, создаем соответствующую операцию отмены
                 undoOperation = applicationContext.getBean(UndoCreate.class);
-                System.out.println("UNDO OP:" + undoOperation.hashCode());
             }
             else
             {
