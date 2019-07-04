@@ -24,3 +24,4 @@ public class Vendor extends NamedEntity
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "vendor", orphanRemoval = true)
     private Set<Device> devices;
 }
+
