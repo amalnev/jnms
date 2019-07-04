@@ -1,4 +1,4 @@
-package ru.amalnev.jnms.web.controllers;
+package ru.amalnev.jnms.web.controllers.ui;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
