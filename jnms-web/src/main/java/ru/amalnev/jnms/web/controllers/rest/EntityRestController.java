@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.amalnev.jnms.common.model.ModelAnalyzer;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,7 +23,7 @@ public class EntityRestController
     {
         final Class entityClass = Class.forName(entityClassName);
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
-        if(repository == null || entityId == null) return null;
+        if (repository == null || entityId == null) return null;
         return (AbstractEntity) repository.findById(entityId).orElse(null);
     }
 
@@ -33,7 +32,7 @@ public class EntityRestController
     {
         final Class entityClass = Class.forName(entityClassName);
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
-        if(repository == null) return null;
+        if (repository == null) return null;
         return (List<? extends AbstractEntity>) repository.findAll();
     }
 
@@ -43,7 +42,7 @@ public class EntityRestController
     {
         final Class entityClass = Class.forName(entityClassName);
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
-        if(repository == null) return null;
+        if (repository == null) return null;
         repository.save(newEntity);
         return newEntity;
     }
@@ -54,7 +53,7 @@ public class EntityRestController
     {
         final Class entityClass = Class.forName(entityClassName);
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
-        if(repository == null || entityId == null) return;
+        if (repository == null || entityId == null) return;
         repository.deleteById(entityId);
     }
 }

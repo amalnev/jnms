@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
-public abstract class AbstractUndoOperation implements UndoOperation
+import java.io.Serializable;
+
+public abstract class AbstractUndoOperation implements UndoOperation, Serializable
 {
     @Getter
     @Setter

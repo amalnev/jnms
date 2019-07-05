@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -34,7 +33,7 @@ public class CrudAspect implements ApplicationContextAware
     @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.deleteById(..))")
     public void beforeCrudDeleteOperation(final JoinPoint joinPoint)
     {
-        if(!enabled) return;
+        if (!enabled) return;
 
         //Это id сущности, которая собирается удалиться из БД, нужно создать
         //подходящую операцию отмены удаления
@@ -43,7 +42,7 @@ public class CrudAspect implements ApplicationContextAware
         //Находим соответствующий репозиторий
         final CrudRepository repository = (CrudRepository) joinPoint.getTarget();
 
-        if(repository == null) return;
+        if (repository == null) return;
 
         //Вытаскиваем из БД текущее состояние данной сущности (до DELETE)
         final AbstractEntity existingEntityState = (AbstractEntity) repository.findById(id).orElse(null);
@@ -57,7 +56,7 @@ public class CrudAspect implements ApplicationContextAware
     @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.save(..))")
     public void beforeCrudSaveOperation(final JoinPoint joinPoint)
     {
-        if(!enabled) return;
+        if (!enabled) return;
 
         //Это сущность, которая собирается сохраниться в БД, нужно создать
         //подходящую операцию отмены сохранения

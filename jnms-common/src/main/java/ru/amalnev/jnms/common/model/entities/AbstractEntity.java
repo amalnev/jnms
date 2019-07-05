@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * Это общий базовый класс для всех сущностей предметной области
@@ -14,7 +15,7 @@ import javax.persistence.MappedSuperclass;
  * @author Aleksei Malnev
  */
 @MappedSuperclass
-public abstract class AbstractEntity implements Cloneable
+public abstract class AbstractEntity implements Cloneable, Serializable
 {
     /**
      * Идентификатор сущности.
