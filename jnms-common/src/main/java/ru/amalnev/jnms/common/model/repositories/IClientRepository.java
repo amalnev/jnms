@@ -2,10 +2,10 @@ package ru.amalnev.jnms.common.model.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.amalnev.jnms.common.model.entities.network.DeviceType;
+import ru.amalnev.jnms.common.model.entities.ttms.Client;
 
 @Repository
-@EntityClass(DeviceType.class)
-public interface IDeviceTypeRepository extends CrudRepository<DeviceType, Long>
+@EntityClass(Client.class)
+public interface IClientRepository extends CrudRepository<Client, Long>
 {
 }

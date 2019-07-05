@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import ru.amalnev.jnms.common.model.ModelAnalyzer;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
+import java.io.Serializable;
+
 @Aspect
 @Component
 public class CrudAspect implements ApplicationContextAware

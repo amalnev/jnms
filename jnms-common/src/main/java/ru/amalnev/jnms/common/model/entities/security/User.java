@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 import ru.amalnev.jnms.common.model.entities.MinPrivilege;
+import ru.amalnev.jnms.common.model.entities.ttms.WorkGroup;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -37,6 +38,14 @@ public class User extends AbstractEntity implements UserDetails
     @Getter
     @Setter
     private String password;
+
+    /**
+     * Рабочая группа, к которой отностится данный пользователь
+     */
+    @Getter
+    @Setter
+    @ManyToOne
+    private WorkGroup workGroup;
 
     /**
      * Подтверждение пароля. Заполняется в UI, не хранится в БД.

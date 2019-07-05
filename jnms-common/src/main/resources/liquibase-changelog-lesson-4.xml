@@ -132,6 +132,108 @@
             <column name="type_id" value="5" />
             <column name="vendor_id" value="2" />
         </insert>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-173">
+        <createTable tableName="WorkGroup">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="WorkGroup">
+            <column name="name" value="Network administrators"/>
+        </insert>
+        <insert tableName="WorkGroup">
+            <column name="name" value="Field engineers"/>
+        </insert>
+        <insert tableName="WorkGroup">
+            <column name="name" value="Support operators"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-174">
+        <addColumn tableName="User">
+            <column name="workGroup_id" type="BIGINT"></column>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="workGroup_id" baseTableName="User" constraintName="fk_user_workgroup" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="WorkGroup"/>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-175">
+        <createTable tableName="Client">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="contactPerson" type="VARCHAR(255)"/>
+            <column name="contractNumber" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="Client">
+            <column name="name" value="ООО Рога и Копыта"/>
+            <column name="address" value="Тоннельная 2" />
+            <column name="contactPerson" value="Вася Пупкин" />
+            <column name="contractNumber" value="123" />
+            <column name="email" value="vasya@roga.kopyta" />
+        </insert>
+        <insert tableName="Client">
+            <column name="name" value="ООО Копыта и Рога"/>
+            <column name="address" value="Донская 13" />
+            <column name="contactPerson" value="Петя Иванов" />
+            <column name="contractNumber" value="456" />
+            <column name="email" value="petya@kopyta.roga" />
+        </insert>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-176">
+        <createTable tableName="NoServiceProblemDetails">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="cpeDevice" type="VARCHAR(255)"/>
+            <column name="serviceDescription" type="VARCHAR(255)"/>
+            <column name="actionsPerformed" type="VARCHAR(255)"/>
+            <column name="layer1ConnectionStatus" type="VARCHAR(255)"/>
+            <column name="layer2ConnectionStatus" type="VARCHAR(255)"/>
+            <column name="layer3ConnectionStatus" type="VARCHAR(255)"/>
+        </createTable>
+        <createTable tableName="ServiceQualityProblemDetails">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="cpeDevice" type="VARCHAR(255)"/>
+            <column name="serviceDescription" type="VARCHAR(255)"/>
+            <column name="actionsPerformed" type="VARCHAR(255)"/>
+            <column name="uplink" type="INT"/>
+            <column name="downlink" type="INT"/>
+            <column name="losses" type="INT"/>
+            <column name="latency" type="INT"/>
+        </createTable>
+        <createTable tableName="TroubleTicket">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="BIGINT"/>
+            <column name="noServiceProblemDetails_id" type="BIGINT"/>
+            <column name="serviceQualityProblemDetails_id" type="BIGINT"/>
+            <column name="severity" type="INT"/>
+            <column name="assignedGroup_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="TroubleTicket" constraintName="fk_client_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="Client"/>
+
+        <addForeignKeyConstraint baseColumnNames="noServiceProblemDetails_id" baseTableName="TroubleTicket" constraintName="fk_nspd_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="NoServiceProblemDetails"/>
+
+        <addForeignKeyConstraint baseColumnNames="serviceQualityProblemDetails_id" baseTableName="TroubleTicket" constraintName="fk_sqpd_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="ServiceQualityProblemDetails"/>
+
+        <addForeignKeyConstraint baseColumnNames="assignedGroup_id" baseTableName="TroubleTicket" constraintName="fk_workgroup_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="WorkGroup"/>
 
     </changeSet>
 </databaseChangeLog>
