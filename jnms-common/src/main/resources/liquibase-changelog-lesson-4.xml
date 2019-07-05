@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="amalnev (generated)" id="1561373236882-172">
+        <insert tableName="User">
+            <column name="id" value="2" />
+            <column name="username" value="apiuser" />
+            <column name="password" value="$2a$10$ENeZp5KfdFZQST.gbwv2xeP9hJLbujO9j/FkfFDs5PJgkzdccDHJC" />
+        </insert>
+        <insert tableName="UserRole">
+            <column name="id" value="2" />
+            <column name="name" value="ROLE_API_USER" />
+            <column name="privilegeLevel" value="3" />
+        </insert>
+        <insert tableName="Authority">
+            <column name="id" value="2"/>
+            <column name="user_id" value="2" />
+            <column name="userRole_id" value="2" />
+        </insert>
+
+        <insert tableName="Site">
+            <column name="id" value="1"/>
+            <column name="name" value="Сочи Гранд Марина" />
+            <column name="address" value="Несебрская 1a" />
+            <column name="latitude" value="43.5846" />
+            <column name="longitude" value="39.716831" />
+        </insert>
+        <insert tableName="Site">
+            <column name="id" value="2"/>
+            <column name="name" value="Сочи Порт" />
+            <column name="address" value="Войкова 1" />
+            <column name="latitude" value="43.580353" />
+            <column name="longitude" value="39.721034" />
+        </insert>
+
+        <insert tableName="Vendor">
+            <column name="id" value="1"/>
+            <column name="name" value="Cisco" />
+        </insert>
+        <insert tableName="Vendor">
+            <column name="id" value="2"/>
+            <column name="name" value="Huawei" />
+        </insert>
+        <insert tableName="Vendor">
+            <column name="id" value="3"/>
+            <column name="name" value="RAD Data Communications" />
+        </insert>
+        <insert tableName="Vendor">
+            <column name="id" value="4"/>
+            <column name="name" value="Juniper" />
+        </insert>
+
+        <insert tableName="DeviceType">
+            <column name="id" value="1"/>
+            <column name="name" value="Router" />
+        </insert>
+        <insert tableName="DeviceType">
+            <column name="id" value="2"/>
+            <column name="name" value="L2 Switch" />
+        </insert>
+        <insert tableName="DeviceType">
+            <column name="id" value="3"/>
+            <column name="name" value="L3 Switch" />
+        </insert>
+        <insert tableName="DeviceType">
+            <column name="id" value="4"/>
+            <column name="name" value="PDH Multiplexer" />
+        </insert>
+        <insert tableName="DeviceType">
+            <column name="id" value="5"/>
+            <column name="name" value="Radio bridge" />
+        </insert>
+
+        <addColumn tableName="Device">
+            <column name="model" type="VARCHAR(255)"></column>
+        </addColumn>
+
+        <insert tableName="Device">
+            <column name="id" value="1"/>
+            <column name="name" value="Core.Router" />
+            <column name="model" value="NE40-X16" />
+            <column name="oamIp" value="10.0.0.1" />
+            <column name="serialNumber" value="213450978548" />
+            <column name="site_id" value="1" />
+            <column name="type_id" value="1" />
+            <column name="vendor_id" value="2" />
+        </insert>
+        <insert tableName="Device">
+            <column name="id" value="2"/>
+            <column name="name" value="SCH.C3900.Marina" />
+            <column name="model" value="3900" />
+            <column name="oamIp" value="10.0.0.2" />
+            <column name="serialNumber" value="HJ84037HBM" />
+            <column name="site_id" value="1" />
+            <column name="type_id" value="1" />
+            <column name="vendor_id" value="1" />
+        </insert>
+        <insert tableName="Device">
+            <column name="id" value="3"/>
+            <column name="name" value="SCH.IPMUX.Port" />
+            <column name="model" value="IpMux" />
+            <column name="oamIp" value="10.0.0.3" />
+            <column name="serialNumber" value="123908" />
+            <column name="site_id" value="2" />
+            <column name="type_id" value="4" />
+            <column name="vendor_id" value="3" />
+        </insert>
+        <insert tableName="Device">
+            <column name="id" value="4"/>
+            <column name="name" value="SCH.H2318.Port" />
+            <column name="model" value="Quidway 2318" />
+            <column name="oamIp" value="10.0.0.4" />
+            <column name="serialNumber" value="GHVS5639" />
+            <column name="site_id" value="2" />
+            <column name="type_id" value="2" />
+            <column name="vendor_id" value="2" />
+        </insert>
+        <insert tableName="Device">
+            <column name="id" value="5"/>
+            <column name="name" value="SCH.RTN910.Port" />
+            <column name="model" value="RTN 910" />
+            <column name="oamIp" value="10.0.0.5" />
+            <column name="site_id" value="2" />
+            <column name="type_id" value="5" />
+            <column name="vendor_id" value="2" />
+        </insert>
+        <insert tableName="Device">
+            <column name="id" value="6"/>
+            <column name="name" value="SCH.RTN950.Marina" />
+            <column name="model" value="RTN 950" />
+            <column name="oamIp" value="10.0.0.6" />
+            <column name="site_id" value="1" />
+            <column name="type_id" value="5" />
+            <column name="vendor_id" value="2" />
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>
