@@ -60,9 +60,13 @@ public class SecurityService implements UserDetailsService
         return userRepository.findById(id);
     }
 
-    public void saveUser(final User user)
+    public void saveUser(final User user, Boolean...hashPassword)
     {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        boolean enc = true;
+        if(hashPassword.length != 0 && !hashPassword[0]) enc = false;
+        if(enc)
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
     }
 
@@ -103,5 +107,12 @@ public class SecurityService implements UserDetailsService
     public User getCurrentUser()
     {
         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
+    public boolean isTechSupportOperator(final User user)
+    {
+        if(user == null) return false;
+        if(user.getWorkGroup() == null) return false;
+        return user.getWorkGroup().getName().equals("Support operators");
     }
 }

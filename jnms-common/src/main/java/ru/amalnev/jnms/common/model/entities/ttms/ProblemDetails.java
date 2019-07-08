@@ -8,18 +8,28 @@ import ru.amalnev.jnms.common.model.entities.DisplayName;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
-@MappedSuperclass
+@Getter
+@Setter
+@Entity
 public class ProblemDetails extends AbstractEntity
 {
-    @Getter
-    @Setter
     private String cpeDevice;
 
-    @Getter
-    @Setter
     private String serviceDescription;
 
-    @Getter
-    @Setter
+    private String layer1ConnectionStatus;
+
+    private String layer2ConnectionStatus;
+
+    private String layer3ConnectionStatus;
+
     private String actionsPerformed;
+
+    private Integer uplink;
+
+    private Integer downlink;
+
+    private Integer losses;
+
+    private Integer latency;
 }

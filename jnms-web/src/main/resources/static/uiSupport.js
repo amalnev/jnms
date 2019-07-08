@@ -1,6 +1,9 @@
 function onDocumentLoaded() {
     var changePasswordCheckbox = document.getElementById("changePasswordCheckbox");
     var saveButton = document.getElementById("saveButton");
+    /*var findClientButton = document.getElementById("findClientButton");
+    var resetClientFormButton = document.getElementById("resetClientFormButton");
+    var submitClientFormButton = document.getElementById("submitClientFormButton");*/
 
     if (changePasswordCheckbox != null) {
         changePasswordCheckbox.addEventListener("click", function () {
@@ -18,7 +21,7 @@ function onDocumentLoaded() {
         });
     }
 
-    if (saveButton != null) {
+    /*if (saveButton != null) {
         saveButton.addEventListener("click", function () {
             var passwordField = document.getElementById("passwordField");
             var passwordConfirmationField = document.getElementById("passwordConfirmationField");
@@ -32,9 +35,72 @@ function onDocumentLoaded() {
             }
         });
     }
+
+    if(resetClientFormButton != null) {
+        resetClientFormButton.addEventListener("click", function () {
+            var clientIdField = document.getElementById("clientIdField");
+            var clientNameField = document.getElementById("clientNameField");
+            var clientAddressField = document.getElementById("clientAddressField");
+            var clientContactPersonField = document.getElementById("clientContactPersonField");
+            var clientContractNumberField = document.getElementById("clientContractNumberField");
+            var clientEmailField = document.getElementById("clientEmailField");
+            var clientPhoneField = document.getElementById("clientPhoneField");
+
+            clientIdField.value = "";
+            clientNameField.value = "";
+            clientAddressField.value = "";
+            clientContactPersonField.value = "";
+            clientContractNumberField.value = "";
+            clientEmailField.value = "";
+            clientPhoneField.value = "";
+        });
+    }
+
+    if(submitClientFormButton != null) {
+        submitClientFormButton.addEventListener("click", function () {
+            var findClientForm = document.getElementById("findClientForm");
+            findClientForm.submit();
+        });
+    }
+
+    if(findClientButton != null) {
+        findClientButton.addEventListener("click", function () {
+            var clientIdField = document.getElementById("clientIdField");
+            var clientNameField = document.getElementById("clientNameField");
+            var clientAddressField = document.getElementById("clientAddressField");
+            var clientContactPersonField = document.getElementById("clientContactPersonField");
+            var clientContractNumberField = document.getElementById("clientContractNumberField");
+            var clientEmailField = document.getElementById("clientEmailField");
+            var clientPhoneField = document.getElementById("clientPhoneField");
+
+            processAllEntities("ru.amalnev.jnms.common.model.entities.ttms.Client",
+                "apiuser",
+                "apiuser", function (client) {
+                    var fillForm = function () {
+                        clientIdField.value = client.id;
+                        clientNameField.value = client.name;
+                        clientAddressField.value = client.address;
+                        clientContactPersonField.value = client.contactPerson;
+                        clientContractNumberField.value = client.contractNumber;
+                        clientEmailField.value = client.email;
+                        clientPhoneField.value = client.phone;
+                    };
+
+                    if(!(clientNameField.value.length == 0) && client.name == clientNameField.value){
+                        fillForm();
+                    }
+                    else if(!(clientAddressField.value.length == 0) && client.address == clientAddressField.value){
+                        fillForm();
+                    }
+                    else if(!(clientContractNumberField.value.length == 0) && client.contractNumber == clientContractNumberField.value){
+                        fillForm();
+                    }
+                });
+        });
+    }*/
 }
 
-function processAllEntities(className, username, password, processor){
+function processAllEntities(className, userName, passWord, processor){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {

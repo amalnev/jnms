@@ -1,6 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
->
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title>jNMS</title>
 		<meta charset="utf-8"/>
@@ -12,67 +11,7 @@
 		
 		<!-- Sidebar
 		 	 Содержит меню сайта -->
-		<div id="header">
-			
-			<div class="top">
-				
-				<!-- Logo -->
-				<div id="logo">
-					<a th:href="@{/}">
-						<h1 id="title">jNMS</h1>
-						<p>Network Management System</p>
-					</a>
-				</div>
-				
-				<!-- Nav -->
-				<nav id="nav">
-					<ul>
-						<!-- Выводим ссылку на страницу профиля пользователя -->
-						<li>
-							<form id="profileLink" action="#" th:action="@{/users/user}" method="get">
-								<input type="hidden" th:name="userId"
-									   th:value="${@securityService.getCurrentUser().getId()}"/>
-								<a href="#" onclick="getElementById('profileLink').submit();">
-									<span class="icon solid fa-user">Profile</span>
-								</a>
-							</form>
-						</li>
-						
-						<!-- Если текущий пользователь обладает максимальными правами, то даем ему ссылку на
-						 	 CRUD-формы сущности User -->
-						<li th:if="${@securityService.getCurrentPrivilegeLevel() >= 15}">
-							<a th:href="@{/users}">
-								<span class="icon solid fa-user">Users</span>
-							</a>
-						</li>
-						
-						<!-- Выводим список сущностей, над которыми текущему пользователю разрешено выполнять CRUD-операции -->
-						<li th:each="entityRecord : ${@modelAnalyzer.getDisplayableEntities()}">
-							<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}">
-								<span class="icon solid fa-th" th:text="${entityRecord.value}"></span>
-							</a>
-						</li>
-						
-						<!-- Выводим ссылку на страницу списка откатываемых операций -->
-						<li>
-							<a th:href="@{/undo}">
-								<span class="icon solid fa-th">Operations log</span>
-							</a>
-						</li>
-						
-						<!-- Выводим ссылку Logout -->
-						<li>
-							<a th:href="@{/logout}">
-								<span class="icon solid fa-th"
-									  th:text="'Sign out (' + ${@securityService.getCurrentUser().getUsername()} + ')'"></span>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			
-			</div>
-		
-		</div>
+		<div th:replace="navigation-fragment :: navigationMenu"></div>
 		
 		<!-- Main
 		     Рабочая область, в которой отображается содержимое разделов.

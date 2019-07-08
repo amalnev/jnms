@@ -192,8 +192,8 @@
         </insert>
     </changeSet>
 
-    <changeSet author="amalnev (generated)" id="1561373236882-176">
-        <createTable tableName="NoServiceProblemDetails">
+    <changeSet author="amalnev (generated)" id="1561373236882-178">
+        <createTable tableName="ProblemDetails">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -203,14 +203,6 @@
             <column name="layer1ConnectionStatus" type="VARCHAR(255)"/>
             <column name="layer2ConnectionStatus" type="VARCHAR(255)"/>
             <column name="layer3ConnectionStatus" type="VARCHAR(255)"/>
-        </createTable>
-        <createTable tableName="ServiceQualityProblemDetails">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="cpeDevice" type="VARCHAR(255)"/>
-            <column name="serviceDescription" type="VARCHAR(255)"/>
-            <column name="actionsPerformed" type="VARCHAR(255)"/>
             <column name="uplink" type="INT"/>
             <column name="downlink" type="INT"/>
             <column name="losses" type="INT"/>
@@ -221,19 +213,14 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="client_id" type="BIGINT"/>
-            <column name="noServiceProblemDetails_id" type="BIGINT"/>
-            <column name="serviceQualityProblemDetails_id" type="BIGINT"/>
+            <column name="problemDetails_id" type="BIGINT"/>
             <column name="severity" type="INT"/>
-            <column name="assignedGroup_id" type="BIGINT"/>
         </createTable>
+    </changeSet>
 
+    <changeSet author="amalnev (generated)" id="1561373236882-179">
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="TroubleTicket" constraintName="fk_client_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="Client"/>
 
-        <addForeignKeyConstraint baseColumnNames="noServiceProblemDetails_id" baseTableName="TroubleTicket" constraintName="fk_nspd_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="NoServiceProblemDetails"/>
-
-        <addForeignKeyConstraint baseColumnNames="serviceQualityProblemDetails_id" baseTableName="TroubleTicket" constraintName="fk_sqpd_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="ServiceQualityProblemDetails"/>
-
-        <addForeignKeyConstraint baseColumnNames="assignedGroup_id" baseTableName="TroubleTicket" constraintName="fk_workgroup_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="WorkGroup"/>
-
+        <addForeignKeyConstraint baseColumnNames="problemDetails_id" baseTableName="TroubleTicket" constraintName="fk_problemdetails_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="ProblemDetails"/>
     </changeSet>
 </databaseChangeLog>

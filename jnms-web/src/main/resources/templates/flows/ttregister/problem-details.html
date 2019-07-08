@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>jNMS</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+		<script th:src="@{/uiSupport.js}"></script>
+	</head>
+	<body class="is-preload" onload="onDocumentLoaded();">
+		
+		<!-- Sidebar
+		 	 Содержит меню сайта -->
+		<div th:replace="navigation-fragment :: navigationMenu"></div>
+		
+		<div id="main">
+			<section class="two">
+				<div class="container">
+					<h3>Perform diagnostic and provide corresponding details</h3>
+					<form action="#" th:object="${problemDetails}" th:action="@{'~' + ${flowExecutionUrl} + '&_eventId_ticketForm'}"
+						  method="post"
+						  id="problemDetailsForm"
+						  enctype="multipart/form-data">
+						<label>
+							CPE
+							<input type="text" th:field="*{cpeDevice}" />
+						</label>
+						
+						<label>
+							Service description
+							<input type="text" th:field="*{serviceDescription}" />
+						</label>
+						
+						<label>
+							Diagnostic actions
+							<input type="text" th:field="*{actionsPerformed}" />
+						</label>
+						
+						<label>
+							Physical connection check
+							<input type="text" th:field="*{layer1ConnectionStatus}"/>
+						</label>
+						
+						<label>
+							L2 check
+							<input type="text" th:field="*{layer2ConnectionStatus}"/>
+						</label>
+						
+						<label>
+							L3 check
+							<input type="text" th:field="*{layer3ConnectionStatus}"/>
+						</label>
+						
+						<label>
+							Uplink speed
+							<input type="text" th:field="*{uplink}"/>
+						</label>
+						
+						<label>
+							Downlink speed
+							<input type="text" th:field="*{downlink}"/>
+						</label>
+						
+						<label>
+							ICMP packet loss
+							<input type="text" th:field="*{losses}"/>
+						</label>
+						
+						<label>
+							ICMP packet latency
+							<input type="text" th:field="*{latency}"/>
+						</label>
+						
+						<button type="submit">Next</button>
+					</form>
+				</div>
+			</section>
+		</div>
+	</body>
+</html>

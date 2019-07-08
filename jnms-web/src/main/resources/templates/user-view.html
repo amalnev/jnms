@@ -45,12 +45,17 @@
 						<tr>
 							<td>Work group</td>
 							<td>
-								<select th:field="*{user.workGroup}">
-									<option th:each="workGroup : ${@modelAnalyzer.getRepositoryByEntityClass(user.getClass().getField('workGroup').getType()).findAll()}"
+								<select th:field="*{workGroup}">
+									<option th:each="workGroup : ${@IWorkGroupRepository.findAll()}"
 											th:selected="${user.getWorkGroup() != null && user.getWorkGroup().getId().equals(workGroup.getId())}"
 											th:text="${workGroup}"
 											th:value="${workGroup.getId()}">
 									</option>
+									<!--<option th:each="workGroup : ${@modelAnalyzer.getRepositoryByEntityClass(user.getClass().getDeclaredField('workGroup').getType()).findAll()}"
+											th:selected="${user.getWorkGroup() != null && user.getWorkGroup().getId().equals(workGroup.getId())}"
+											th:text="${workGroup}"
+											th:value="${workGroup.getId()}">
+									</option>-->
 								</select>
 							</td>
 						</tr>

@@ -57,10 +57,18 @@ public class UserController
         if (requestedAction.equals("Save"))
         {
             if (user.getId() == null) user.setId(-1L);
-            final User existingUser = securityService.findUserById(user.getId()).orElse(new User());
+            User existingUser = securityService.findUserById(user.getId()).orElse(null);
+            boolean newUser = false;
+            if(existingUser == null)
+            {
+                existingUser = new User();
+                newUser = true;
+            }
+
             existingUser.setUsername(user.getUsername());
             if (user.getPassword() != null && !user.getPassword().isEmpty())
             {
+                newUser = true;
                 existingUser.setPassword(user.getPassword());
             }
 
@@ -69,7 +77,12 @@ public class UserController
                 existingUser.setPicture(pictureFile.getBytes());
             }
 
-            securityService.saveUser(existingUser);
+            existingUser.setWorkGroup(user.getWorkGroup());
+
+            if(newUser)
+                securityService.saveUser(existingUser);
+            else
+                securityService.saveUser(existingUser, false);
         }
 
         return "redirect:/users";

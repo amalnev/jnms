@@ -33,6 +33,10 @@ body {
 	line-height: 1;
 }
 
+input:read-only {
+	background-color: darkgrey;
+}
+
 .fieldError {
 	color: red;
 }
