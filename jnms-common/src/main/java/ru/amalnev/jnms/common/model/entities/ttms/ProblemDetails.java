@@ -8,6 +8,13 @@ import ru.amalnev.jnms.common.model.entities.DisplayName;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Данный класс реализует DTO-объект, соответствующий форме ввода диагностической
+ * информации. Оператор техподдержки заполняет эту форму в процессе удаленной диагностики
+ * проблемы, результат попадает на сервер в виде объекта данного класса
+ *
+ * @author Aleksei Malnev
+ */
 @Getter
 @Setter
 @Entity

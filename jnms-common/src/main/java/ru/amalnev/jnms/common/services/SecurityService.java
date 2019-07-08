@@ -104,11 +104,23 @@ public class SecurityService implements UserDetailsService
         return strongestPrivilege;
     }
 
+    /**
+     * Данная функция возвращает текущего пользователя системы
+     *
+     * @return
+     */
     public User getCurrentUser()
     {
         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
+    /**
+     * Проверяет, является ли данный пользователь оператором техподдержки
+     *
+     * @param user Пользователь, которого нужно проверить на принадлежность к операторам
+     *             техподдержки
+     * @return
+     */
     public boolean isTechSupportOperator(final User user)
     {
         if(user == null) return false;

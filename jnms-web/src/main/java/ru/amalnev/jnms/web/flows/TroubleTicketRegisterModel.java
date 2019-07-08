@@ -8,6 +8,10 @@ import ru.amalnev.jnms.common.model.entities.ttms.TroubleTicket;
 
 import java.io.Serializable;
 
+/**
+ * Это DTO-объект, заполняемый данными по мере продвижения оператора
+ * по формам WebFlow, реализующего создание нового трабл-тикета
+ */
 @Getter
 @Setter
 public class TroubleTicketRegisterModel implements Serializable
