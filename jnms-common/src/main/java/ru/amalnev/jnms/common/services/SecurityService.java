@@ -60,11 +60,11 @@ public class SecurityService implements UserDetailsService
         return userRepository.findById(id);
     }
 
-    public void saveUser(final User user, Boolean...hashPassword)
+    public void saveUser(final User user, Boolean... hashPassword)
     {
         boolean enc = true;
-        if(hashPassword.length != 0 && !hashPassword[0]) enc = false;
-        if(enc)
+        if (hashPassword.length != 0 && !hashPassword[0]) enc = false;
+        if (enc)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
@@ -123,8 +123,8 @@ public class SecurityService implements UserDetailsService
      */
     public boolean isTechSupportOperator(final User user)
     {
-        if(user == null) return false;
-        if(user.getWorkGroup() == null) return false;
+        if (user == null) return false;
+        if (user.getWorkGroup() == null) return false;
         return user.getWorkGroup().getName().equals("Support operators");
     }
 }

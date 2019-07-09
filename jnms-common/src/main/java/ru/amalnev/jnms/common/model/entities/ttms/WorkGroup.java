@@ -7,7 +7,10 @@ import ru.amalnev.jnms.common.model.entities.MinPrivilege;
 import ru.amalnev.jnms.common.model.entities.NamedEntity;
 import ru.amalnev.jnms.common.model.entities.security.User;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity

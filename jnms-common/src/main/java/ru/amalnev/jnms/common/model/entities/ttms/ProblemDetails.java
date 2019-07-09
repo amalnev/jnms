@@ -3,10 +3,8 @@ package ru.amalnev.jnms.common.model.entities.ttms;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
-import ru.amalnev.jnms.common.model.entities.DisplayName;
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 
 /**
  * Данный класс реализует DTO-объект, соответствующий форме ввода диагностической

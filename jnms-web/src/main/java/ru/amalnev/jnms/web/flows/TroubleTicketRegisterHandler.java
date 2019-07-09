@@ -63,20 +63,20 @@ public class TroubleTicketRegisterHandler
                                      final MessageContext error)
     {
         //На данном этапе если клиента нет - то это ошибка
-        if(troubleTicketRegisterModel.getClient() == null) return FAILURE;
+        if (troubleTicketRegisterModel.getClient() == null) return FAILURE;
 
         //Находим клиента в репозитории на основе данных, введенных оператором в форму поиска клиента.
         final Client searchCriteria = troubleTicketRegisterModel.getClient();
         Client existingClient = null;
-        if(searchCriteria.getName() != null && !searchCriteria.getName().isEmpty())
+        if (searchCriteria.getName() != null && !searchCriteria.getName().isEmpty())
         {
             existingClient = clientRepository.findClientByName(searchCriteria.getName());
         }
-        else if(searchCriteria.getContractNumber() != null && !searchCriteria.getContractNumber().isEmpty())
+        else if (searchCriteria.getContractNumber() != null && !searchCriteria.getContractNumber().isEmpty())
         {
             existingClient = clientRepository.findClientByContractNumber(searchCriteria.getContractNumber());
         }
-        else if(searchCriteria.getAddress() != null && !searchCriteria.getAddress().isEmpty())
+        else if (searchCriteria.getAddress() != null && !searchCriteria.getAddress().isEmpty())
         {
             existingClient = clientRepository.findClientByAddress(searchCriteria.getAddress());
         }
@@ -146,10 +146,10 @@ public class TroubleTicketRegisterHandler
     public String validateTroubleTicket(final TroubleTicketRegisterModel troubleTicketRegisterModel,
                                         final MessageContext error)
     {
-        if(troubleTicketRegisterModel.getTroubleTicket() == null) return FAILURE;
+        if (troubleTicketRegisterModel.getTroubleTicket() == null) return FAILURE;
         final TroubleTicket troubleTicket = troubleTicketRegisterModel.getTroubleTicket();
         final ProblemDetails problemDetails = troubleTicketRegisterModel.getProblemDetails();
-        if(problemDetails != null) problemDetailsRepository.save(problemDetails);
+        if (problemDetails != null) problemDetailsRepository.save(problemDetails);
 
         troubleTicket.setClient(troubleTicketRegisterModel.getClient());
         troubleTicket.setProblemDetails(problemDetails);

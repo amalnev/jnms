@@ -59,7 +59,7 @@ public class UserController
             if (user.getId() == null) user.setId(-1L);
             User existingUser = securityService.findUserById(user.getId()).orElse(null);
             boolean newUser = false;
-            if(existingUser == null)
+            if (existingUser == null)
             {
                 existingUser = new User();
                 newUser = true;
@@ -79,7 +79,7 @@ public class UserController
 
             existingUser.setWorkGroup(user.getWorkGroup());
 
-            if(newUser)
+            if (newUser)
                 securityService.saveUser(existingUser);
             else
                 securityService.saveUser(existingUser, false);
