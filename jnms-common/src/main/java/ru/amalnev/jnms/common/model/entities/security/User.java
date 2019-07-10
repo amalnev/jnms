@@ -59,7 +59,7 @@ public class User extends AbstractEntity implements UserDetails
      * Роли, назначенные данному пользователю.
      */
     @Getter
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     private Set<Authority> authorities;
 
     @Lob

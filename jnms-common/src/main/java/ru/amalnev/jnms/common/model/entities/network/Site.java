@@ -63,6 +63,6 @@ public class Site extends NamedEntity
      */
     @Getter
     @DisplayName(value = "Devices", orderOfAppearance = 6)
-    @OneToMany(mappedBy = "site", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "site", orphanRemoval = true)
     private Set<Device> devices;
 }

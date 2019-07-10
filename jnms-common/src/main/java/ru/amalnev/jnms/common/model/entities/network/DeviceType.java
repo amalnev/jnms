@@ -28,6 +28,6 @@ public class DeviceType extends NamedEntity
      */
     @Getter
     @DisplayName(value = "Devices", orderOfAppearance = 3)
-    @OneToMany(mappedBy = "type", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "type", orphanRemoval = true)
     private Set<Device> devices;
 }
