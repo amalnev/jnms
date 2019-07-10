@@ -47,6 +47,7 @@
 								</a>
 							</li>
 							
+							
 							<!-- Выводим список сущностей, над которыми текущему пользователю разрешено выполнять CRUD-операции -->
 							<li th:each="entityRecord : ${@modelAnalyzer.getDisplayableEntities()}">
 								<a th:href="@{/grid(entityClassName=${entityRecord.key.getName()})}">
