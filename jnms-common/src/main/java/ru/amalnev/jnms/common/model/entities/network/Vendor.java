@@ -24,7 +24,7 @@ public class Vendor extends NamedEntity
 {
     @Getter
     @DisplayName(value = "Devices", orderOfAppearance = 6)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "vendor", orphanRemoval = true)
+    @OneToMany(mappedBy = "vendor", orphanRemoval = true)
     private Set<Device> devices;
 }
 
