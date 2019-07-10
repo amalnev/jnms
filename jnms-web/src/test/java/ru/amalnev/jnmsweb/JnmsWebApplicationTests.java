@@ -19,7 +19,7 @@ public class JnmsWebApplicationTests
     public void contextLoads()
     {
         ExpressionParser parser = new SpelExpressionParser();
-        Expression exp = parser.parseExpression(" T(ru.amalnev.jnms.common.entities.DisplayName).class");
+        Expression exp = parser.parseExpression(" T(DisplayName).class");
         Object result = exp.getValue();
         //List fields = (List) exp.getValue();
         System.out.println(result);

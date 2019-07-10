@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>jNMS</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+		<script th:src="@{/uiSupport.js}"></script>
+	</head>
+	<body class="is-preload" onload="onDocumentLoaded();">
+		
+		<!-- Sidebar
+		 	 Содержит меню сайта -->
+		<div th:replace="navigation-fragment :: navigationMenu"></div>
+		
+		<div id="main">
+			<section class="two">
+				<div class="container">
+					<h3>Other trouble ticket parameters</h3>
+					<form action="#" th:object="${troubleTicket}" th:action="@{'~' + ${flowExecutionUrl} + '&_eventId_success'}"
+						  method="post"
+						  id="ticketForm"
+						  enctype="multipart/form-data">
+								
+						<label>
+							Severity
+							<input type="text" th:field="*{severity}" />
+						</label>
+						
+						<button type="submit">Next</button>
+					</form>
+				</div>
+			</section>
+		</div>
+	</body>
+</html>

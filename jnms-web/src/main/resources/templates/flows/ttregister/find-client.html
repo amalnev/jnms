@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>jNMS</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+		<script th:src="@{/uiSupport.js}"></script>
+	</head>
+	<body class="is-preload" onload="onDocumentLoaded();">
+		
+		<!-- Sidebar
+		 	 Содержит меню сайта -->
+		<div th:replace="navigation-fragment :: navigationMenu"></div>
+		
+		<div id="main">
+			<section class="two">
+				<div class="container">
+					<h3>Find a client</h3>
+					<form action="#" th:object="${client}" th:action="@{'~' + ${flowExecutionUrl} + '&_eventId_problemDetailsForm'}"
+						  method="post"
+						  id="findClientForm"
+						  enctype="multipart/form-data">
+						<!--<label>
+							Client id
+							<input type="hidden" th:field="*{id}" id="clientIdField" readonly/>
+						</label>-->
+						
+						<label>
+							Client organisation name
+							<select th:field="*{name}">
+								<option th:value="${null}">Unknown</option>
+								<option th:each="company : ${@IClientRepository.findAll()}"
+										th:value="${company.name}"
+										th:text="${company.name}">
+								</option>
+							</select>
+						</label>
+						
+						<label>
+							Address
+							<select th:field="*{address}">
+								<option th:value="${null}">Unknown</option>
+								<option th:each="company : ${@IClientRepository.findAll()}"
+										th:value="${company.address}"
+										th:text="${company.address}">
+								</option>
+							</select>
+						</label>
+						
+						<label>
+							Address
+							<select th:field="*{contractNumber}">
+								<option th:value="${null}">Unknown</option>
+								<option th:each="company : ${@IClientRepository.findAll()}"
+										th:value="${company.contractNumber}"
+										th:text="${company.contractNumber}">
+								</option>
+							</select>
+						</label>
+						<!--
+						<label>
+							Contact person
+							<input type="text" th:field="*{contactPerson}" id="clientContactPersonField" readonly/>
+						</label>
+						
+						<label>
+							Contract number
+							<input type="text" th:field="*{contractNumber}" id="clientContractNumberField" readonly/>
+						</label>
+						
+						<label>
+							Email
+							<input type="text" th:field="*{email}" id="clientEmailField" readonly/>
+						</label>
+						
+						<label>
+							Phone
+							<input type="text" th:field="*{phone}" id="clientPhoneField" readonly/>
+						</label>-->
+						
+						<button type="submit" id="submitClientFormButton">Next</button>
+						<!--<button type="button" id="findClientButton">Find client</button>
+						<button type="button" id="resetClientFormButton">Reset form</button>-->
+					</form>
+				</div>
+			</section>
+		</div>
+	</body>
+</html>

@@ -2,19 +2,15 @@ package ru.amalnev.jnms.web.undo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
-public abstract class AbstractUndoOperation implements UndoOperation, ApplicationContextAware
+import java.io.Serializable;
+
+public abstract class AbstractUndoOperation implements UndoOperation, Serializable
 {
     @Getter
     @Setter
     private AbstractEntity entity;
-
-    @Getter
-    @Setter
-    private ApplicationContext applicationContext;
 
     protected abstract String getOperationName();
 

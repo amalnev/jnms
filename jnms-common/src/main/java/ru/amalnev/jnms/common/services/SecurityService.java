@@ -8,12 +8,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.amalnev.jnms.common.entities.security.Authority;
-import ru.amalnev.jnms.common.entities.security.User;
-import ru.amalnev.jnms.common.entities.security.UserRole;
-import ru.amalnev.jnms.common.repositories.IAuthorityRepository;
-import ru.amalnev.jnms.common.repositories.IUserRepository;
-import ru.amalnev.jnms.common.repositories.IUserRoleRepository;
+import ru.amalnev.jnms.common.model.entities.security.Authority;
+import ru.amalnev.jnms.common.model.entities.security.User;
+import ru.amalnev.jnms.common.model.entities.security.UserRole;
+import ru.amalnev.jnms.common.model.repositories.IAuthorityRepository;
+import ru.amalnev.jnms.common.model.repositories.IUserRepository;
+import ru.amalnev.jnms.common.model.repositories.IUserRoleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,9 +60,13 @@ public class SecurityService implements UserDetailsService
         return userRepository.findById(id);
     }
 
-    public void saveUser(final User user)
+    public void saveUser(final User user, Boolean... hashPassword)
     {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        boolean enc = true;
+        if (hashPassword.length != 0 && !hashPassword[0]) enc = false;
+        if (enc)
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
     }
 
@@ -100,8 +104,27 @@ public class SecurityService implements UserDetailsService
         return strongestPrivilege;
     }
 
+    /**
+     * Данная функция возвращает текущего пользователя системы
+     *
+     * @return
+     */
     public User getCurrentUser()
     {
         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
+    /**
+     * Проверяет, является ли данный пользователь оператором техподдержки
+     *
+     * @param user Пользователь, которого нужно проверить на принадлежность к операторам
+     *             техподдержки
+     * @return
+     */
+    public boolean isTechSupportOperator(final User user)
+    {
+        if (user == null) return false;
+        if (user.getWorkGroup() == null) return false;
+        return user.getWorkGroup().getName().equals("Support operators");
     }
 }

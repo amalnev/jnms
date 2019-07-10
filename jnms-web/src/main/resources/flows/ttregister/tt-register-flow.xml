@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <!-- Данный WebFlow реализует регистрацию трабл-тикета оператором техподдержки клиентов.
+    Состоит из трех шагов. На первом шаге оператор находит клиента в БД по некоторым критериям.
+    На втором этапе оператор проводит диагностику проблемы и заполняет соответствующую форму.
+    На третьем этапе заполняются оставшиеся параметры трабл-тикета, после чего он сохраняется в системе.
+    -->
+
+    <var name="client" class="ru.amalnev.jnms.common.model.entities.ttms.Client" />
+    <var name="problemDetails" class="ru.amalnev.jnms.common.model.entities.ttms.ProblemDetails" />
+    <var name="troubleTicket" class="ru.amalnev.jnms.common.model.entities.ttms.TroubleTicket" />
+
+    <!-- На старте мы создаем DTO-объект, который будет заполняться данными по мере продвижения от формы к форме -->
+    <on-start>
+        <evaluate expression="troubleTicketRegisterHandler.makeModel()"
+                  result="flowScope.troubleTicketRegisterModel" />
+    </on-start>
+
+    <!-- Выводим форму, позволяющую найти существующего клиента по наиболее удобным критериям-->
+    <view-state id="findClient" view="flows/ttregister/find-client" model="client">
+        <transition on="problemDetailsForm" to="validateClient" />
+        <on-exit>
+            <evaluate expression="troubleTicketRegisterHandler.setClient(flowScope.troubleTicketRegisterModel, client)" />
+        </on-exit>
+    </view-state>
+
+    <!-- Проверяем данные, введенные в форму поиска клиента, в случае ошибки возвращаемся назад, иначе двигаемся дальше -->
+    <action-state id="validateClient">
+        <evaluate expression="troubleTicketRegisterHandler.validateClientInfo(flowScope.troubleTicketRegisterModel, messageContext)" />
+        <transition on="success" to="problemDetailsForm" />
+        <transition on="failure" to="findClient" />
+    </action-state>
+
+    <!-- Выводим форму, позволяющую заполнить дополнительную информацию о возникшей проблеме -->
+    <view-state id="problemDetailsForm" view="flows/ttregister/problem-details" model="problemDetails">
+        <transition on="findClient" to="findClient" />
+        <transition on="ticketForm" to="validateProblemDetails" />
+        <on-exit>
+            <evaluate expression="troubleTicketRegisterHandler.setProblemDetails(flowScope.troubleTicketRegisterModel, problemDetails)" />
+        </on-exit>
+    </view-state>
+
+    <!-- Проверяем данные, введенные в форму детализации проблемы -->
+    <action-state id="validateProblemDetails">
+        <evaluate expression="troubleTicketRegisterHandler.validateProblemDetails(flowScope.troubleTicketRegisterModel, messageContext)" />
+        <transition on="success" to="ticketForm" />
+        <transition on="failure" to="problemDetailsForm" />
+    </action-state>
+
+    <!-- Выводим форму, позволяющую заполнить общие параметры трабл-тикета -->
+    <view-state id="ticketForm" view="flows/ttregister/trouble-ticket" model="troubleTicket">
+        <transition on="success" to="validateTicket" />
+        <transition on="problemDetailsForm" to="problemDetailsForm" />
+        <transition on="findClient" to="findClient" />
+        <on-exit>
+            <evaluate expression="troubleTicketRegisterHandler.setTroubleTicket(flowScope.troubleTicketRegisterModel, troubleTicket)" />
+        </on-exit>
+    </view-state>
+
+    <!-- Проверяем всю введенную до настоящего момента информацию. Если все нормально, то будет произведено
+     сохранение в БД и переход к общему списку трабл-тикетов-->
+    <action-state id="validateTicket">
+        <evaluate expression="troubleTicketRegisterHandler.validateTroubleTicket(flowScope.troubleTicketRegisterModel, messageContext)" />
+        <transition on="success" to="success" />
+        <transition on="failure" to="ticketForm" />
+    </action-state>
+
+    <end-state id="success" view="externalRedirect:contextRelative:/grid?entityClassName=ru.amalnev.jnms.common.model.entities.ttms.TroubleTicket" />
+    <end-state id="home" view="externalRedirect:contextRelative:/" />
+
+    <global-transitions>
+        <transition on="home" to="home" validate="false" />
+    </global-transitions>
+
+</flow>

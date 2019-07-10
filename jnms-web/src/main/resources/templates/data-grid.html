@@ -32,8 +32,8 @@
 						<td th:each="cellValue : ${record.value}">
 							<span th:text="${cellValue}"> Cell value</span>
 						<td>
-						
-						<!-- В каждую строку добавляем кнопки Edit и Delete -->
+							
+							<!-- В каждую строку добавляем кнопки Edit и Delete -->
 						<td>
 							<form action="#" th:action="@{/entity}" method="get">
 								<input type="hidden" th:name="entityClassName" th:value="${entityClassName}"/>

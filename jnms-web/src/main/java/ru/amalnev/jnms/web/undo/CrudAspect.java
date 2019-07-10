@@ -1,17 +1,17 @@
 package ru.amalnev.jnms.web.undo;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
-import ru.amalnev.jnms.common.entities.AbstractEntity;
-import ru.amalnev.jnms.common.utilities.ReflectionUtils;
+import ru.amalnev.jnms.common.model.ModelAnalyzer;
+import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
 @Aspect
 @Component
@@ -21,16 +21,43 @@ public class CrudAspect implements ApplicationContextAware
     private ApplicationContext applicationContext;
 
     @Setter(onMethod = @__({@Autowired}))
+    private ModelAnalyzer modelAnalyzer;
+
+    @Setter(onMethod = @__({@Autowired}))
     private UndoOperationsStack undoOperations;
 
-    @Pointcut("execution(* ru.amalnev.jnms.common.repositories.*.save(..))")
-    public void saveMethodInsideACrudRepository()
+    @Getter
+    @Setter
+    private volatile boolean enabled = true;
+
+    @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.deleteById(..))")
+    public void beforeCrudDeleteOperation(final JoinPoint joinPoint)
     {
+        if (!enabled) return;
+
+        //Это id сущности, которая собирается удалиться из БД, нужно создать
+        //подходящую операцию отмены удаления
+        final Long id = (Long) joinPoint.getArgs()[0];
+
+        //Находим соответствующий репозиторий
+        final CrudRepository repository = (CrudRepository) joinPoint.getTarget();
+
+        if (repository == null) return;
+
+        //Вытаскиваем из БД текущее состояние данной сущности (до DELETE)
+        final AbstractEntity existingEntityState = (AbstractEntity) repository.findById(id).orElse(null);
+
+        final UndoOperation undoOperation = applicationContext.getBean(UndoDelete.class);
+        undoOperation.setEntity(existingEntityState);
+
+        undoOperations.add(undoOperation);
     }
 
-    @Before("saveMethodInsideACrudRepository()")
-    public void beforeCrudOperation(final JoinPoint joinPoint) throws CloneNotSupportedException
+    @Before("execution(* ru.amalnev.jnms.common.model.repositories.*.save(..))")
+    public void beforeCrudSaveOperation(final JoinPoint joinPoint)
     {
+        if (!enabled) return;
+
         //Это сущность, которая собирается сохраниться в БД, нужно создать
         //подходящую операцию отмены сохранения
         final AbstractEntity newEntityState = (AbstractEntity) joinPoint.getArgs()[0];
@@ -46,9 +73,7 @@ public class CrudAspect implements ApplicationContextAware
             //Это скорее всего существующая сущность, проверим это.
 
             //Находим соответствующий репозиторий
-            final CrudRepository repository = ReflectionUtils.getRepositoryByEntityClass(
-                    applicationContext,
-                    newEntityState.getClass());
+            final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(newEntityState.getClass());
 
             //Вытаскиваем из БД текущее состояние данной сущности (до UPDATE)
             final AbstractEntity existingEntityState = (AbstractEntity) repository.findById(
