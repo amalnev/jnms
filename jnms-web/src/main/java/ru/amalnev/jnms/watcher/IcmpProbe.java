@@ -1,4 +1,4 @@
-package ru.amalnev.jnmswatcher;
+package ru.amalnev.jnms.watcher;
 
 import lombok.Getter;
 import lombok.Setter;

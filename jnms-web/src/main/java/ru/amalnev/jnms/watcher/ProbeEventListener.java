@@ -1,4 +1,4 @@
-package ru.amalnev.jnmswatcher;
+package ru.amalnev.jnms.watcher;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.data.repository.CrudRepository;
@@ -26,7 +26,6 @@ public class ProbeEventListener
         final NetworkEvent mostRecentEvent = (NetworkEvent) findMostRecentEventMethod.invoke(repository, probe.getDevice());
         if(mostRecentEvent == null || (mostRecentEvent.isOutcome() != probeEvent.getNetworkEvent().isOutcome()))
         {
-            System.out.println("Saving network event " + probeEvent.getNetworkEvent());
             repository.save(probeEvent.getNetworkEvent());
         }
     }

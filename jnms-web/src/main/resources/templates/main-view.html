@@ -1,11 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title>jNMS</title>
-		<meta charset="utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-		<link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
-		<script th:src="@{/uiSupport.js}"></script>
+	<head th:include="head-fragment :: headerFragment">
 	</head>
 	<body class="is-preload" onload="onDocumentLoaded();">
 		
@@ -37,6 +32,12 @@
 					<!-- viewType == 'undo' - показываем список откатываемых операций -->
 					<div th:if="${viewType == 'undo'}">
 						<div th:replace="operations-log :: operationsLog">
+						</div>
+					</div>
+					
+					<!-- viewType == 'undo' - показываем список откатываемых операций -->
+					<div th:if="${viewType == 'notifications'}">
+						<div th:replace="notifications :: notificationsLog">
 						</div>
 					</div>
 					

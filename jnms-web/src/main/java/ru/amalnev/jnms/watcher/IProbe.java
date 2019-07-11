@@ -1,4 +1,4 @@
-package ru.amalnev.jnmswatcher;
+package ru.amalnev.jnms.watcher;
 
 import org.springframework.data.repository.CrudRepository;
 import ru.amalnev.jnms.common.model.entities.network.Device;
