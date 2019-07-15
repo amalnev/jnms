@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  jnms-db:
+      image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+        - 'MYSQL_ROOT_PASSWORD=123'
+      ports:
+        - '4306:3306'
+
+  jnms-web:
+    image: 'jnms-web'
+    environment:
+      - 'JDBC_DATABASE_URL=jdbc:mysql://jnms-db:3306/jnms?createDatabaseIfNotExist=true&serverTimezone=UTC'
+      - 'JDBC_DATABASE_USERNAME=root'
+      - 'JDBC_DATABASE_PASSWORD=123'
+    ports:
+      - '8189:8189'
+    depends_on:
+      - jnms-db
