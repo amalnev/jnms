@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.ttms;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
@@ -24,6 +25,7 @@ public class TroubleTicket extends AbstractEntity
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "Client", orderOfAppearance = 3)
     private Client client;
 
@@ -34,6 +36,7 @@ public class TroubleTicket extends AbstractEntity
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "Details", orderOfAppearance = 4)
     private ProblemDetails problemDetails;
 

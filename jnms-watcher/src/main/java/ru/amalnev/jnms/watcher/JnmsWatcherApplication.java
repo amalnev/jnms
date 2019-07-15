@@ -1,4 +1,4 @@
-package ru.amalnev.jnmswatcher;
+package ru.amalnev.jnms.watcher;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.network;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
@@ -16,6 +17,7 @@ public abstract class NetworkEvent extends AbstractEntity
     private Long timestamp;
 
     @ManyToOne
+    ////@JsonManagedReference
     private Device device;
 
     @Column(columnDefinition = "TINYINT(1)")

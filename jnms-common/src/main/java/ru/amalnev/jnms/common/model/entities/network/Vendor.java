@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.network;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.common.model.entities.MinPrivilege;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class Vendor extends NamedEntity
 {
     @Getter
+    @JsonBackReference
     @DisplayName(value = "Devices", orderOfAppearance = 6)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "vendor", orphanRemoval = true)
     private Set<Device> devices;

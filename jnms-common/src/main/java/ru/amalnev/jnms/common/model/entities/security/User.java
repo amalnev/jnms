@@ -1,5 +1,7 @@
 package ru.amalnev.jnms.common.model.entities.security;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,6 +47,7 @@ public class User extends AbstractEntity implements UserDetails
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     private WorkGroup workGroup;
 
     /**
@@ -59,6 +62,7 @@ public class User extends AbstractEntity implements UserDetails
      * Роли, назначенные данному пользователю.
      */
     @Getter
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     private Set<Authority> authorities;
 

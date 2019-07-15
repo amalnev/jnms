@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.web;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,8 +15,19 @@ import org.springframework.context.annotation.PropertySources;
 })
 public class JnmsWebApplication
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws InterruptedException
     {
-        SpringApplication.run(JnmsWebApplication.class, args);
+/*        while(true)
+        {
+            try
+            {*/
+                SpringApplication.run(JnmsWebApplication.class, args);
+/*            }
+            catch (BeanCreationException e)
+            {
+                Thread.sleep(10000);
+                continue;
+            }
+        }*/
     }
 }
