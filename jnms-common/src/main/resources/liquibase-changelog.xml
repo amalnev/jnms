@@ -2,4 +2,6 @@
     <include file="liquibase-changelog-baseline.xml"/>
     <include file="liquibase-changelog-lesson-3.xml"/>
     <include file="liquibase-changelog-lesson-4.xml"/>
+    <include file="liquibase-changelog-lesson-6.xml"/>
+
 </databaseChangeLog>

@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+    postgres-db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: 123
+        ports:
+            - 5432:5432
+        volumes:
+            - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    postgres-adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8081:8080
