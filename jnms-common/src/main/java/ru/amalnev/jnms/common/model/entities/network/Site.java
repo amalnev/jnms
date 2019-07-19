@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.network;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,6 +63,7 @@ public class Site extends NamedEntity
      * Отображается в UI с подписью "Devices" на 6-й позиции.
      */
     @Getter
+    @JsonBackReference
     @DisplayName(value = "Devices", orderOfAppearance = 6)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "site", orphanRemoval = true)
     private Set<Device> devices;

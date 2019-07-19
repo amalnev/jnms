@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.security;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Authority extends AbstractEntity implements GrantedAuthority
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "User", orderOfAppearance = 3)
     private User user;
 
@@ -43,6 +45,7 @@ public class Authority extends AbstractEntity implements GrantedAuthority
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "User role", orderOfAppearance = 4)
     private UserRole userRole;
 

@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.ttms;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
@@ -26,6 +27,7 @@ public class WorkGroup extends NamedEntity
     private String description;
 
     @Getter
+    @JsonBackReference
     @DisplayName(value = "Users", orderOfAppearance = 4)
     @OneToMany(mappedBy = "workGroup", orphanRemoval = true)
     private Set<User> users;

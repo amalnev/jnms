@@ -223,4 +223,19 @@
 
         <addForeignKeyConstraint baseColumnNames="problemDetails_id" baseTableName="TroubleTicket" constraintName="fk_problemdetails_tt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="ProblemDetails"/>
     </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-180">
+        <createTable tableName="IcmpEvent">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="timestamp" type="BIGINT"/>
+            <column name="device_id" type="BIGINT"/>
+            <column name="outcome" type="TINYINT(1)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="amalnev (generated)" id="1561373236882-181">
+        <addForeignKeyConstraint baseColumnNames="device_id" baseTableName="IcmpEvent" constraintName="fk_icmpevent_device" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="Device"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.network;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.common.model.entities.MinPrivilege;
@@ -27,6 +28,7 @@ public class DeviceType extends NamedEntity
      * Отображается в UI с подписью "Devices" на 3-й позиции.
      */
     @Getter
+    @JsonBackReference
     @DisplayName(value = "Devices", orderOfAppearance = 3)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "type", orphanRemoval = true)
     private Set<Device> devices;

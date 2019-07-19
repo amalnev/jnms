@@ -23,4 +23,38 @@
         <module>jnms-watcher</module>
     </modules>
 
+    <build>
+        <plugins>
+            <!--<plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>up</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>down</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>down</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                            <removeVolumes>true</removeVolumes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+    </build>
+
 </project>

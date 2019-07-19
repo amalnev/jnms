@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+    jnms-db:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            - 'MYSQL_ROOT_PASSWORD=123'
+        ports:
+            - '4306:3306'
+        healthcheck:
+          test: ["CMD", "mysql", "--version"]
+
+    jnms-watcher:
+        image: 'jnms-watcher'
+        environment:
+            - 'JNMS_WEB_HOST=jnms-web'
+            - 'JNMS_WEB_PORT=8189'
+            - 'JNMS_WEB_SCHEME=http'
+            - 'JDBC_DATABASE_URL=jdbc:mysql://jnms-db:3306/jnms?createDatabaseIfNotExist=true&serverTimezone=UTC'
+            - 'JDBC_DATABASE_USERNAME=root'
+            - 'JDBC_DATABASE_PASSWORD=123'
+        ports:
+            - '6000:6000'
+        depends_on:
+            - jnms-web
+
+    jnms-web:
+        image: 'jnms-web'
+        environment:
+            - 'JDBC_DATABASE_URL=jdbc:mysql://jnms-db:3306/jnms?createDatabaseIfNotExist=true&serverTimezone=UTC'
+            - 'JDBC_DATABASE_USERNAME=root'
+            - 'JDBC_DATABASE_PASSWORD=123'
+        ports:
+            - '8189:8189'
+        healthcheck:
+          test: "exit 0"
+        depends_on:
+            - jnms-db

@@ -1,13 +1,18 @@
 package ru.amalnev.jnms.web.controllers.rest;
 
+//import com.netflix.discovery.EurekaClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.amalnev.jnms.common.model.ModelAnalyzer;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,7 +22,13 @@ public class EntityRestController
     @Setter(onMethod = @__({@Autowired}))
     private ModelAnalyzer modelAnalyzer;
 
-    @GetMapping("/entities/{entityClassName}/{entityId}")
+/*    @Value("${spring.application.name}")
+    private String appName;
+
+    @Setter(onMethod = @__({@Autowired, @Lazy}))
+    private EurekaClient eurekaClient;*/
+
+    @GetMapping(path = "/entities/{entityClassName}/{entityId}", produces = MediaType.APPLICATION_JSON_VALUE)
     private AbstractEntity getEntityById(final @PathVariable String entityClassName,
                                          final @PathVariable Long entityId) throws ClassNotFoundException
     {
@@ -27,7 +38,7 @@ public class EntityRestController
         return (AbstractEntity) repository.findById(entityId).orElse(null);
     }
 
-    @GetMapping("/entities/{entityClassName}")
+    @GetMapping(path = "/entities/{entityClassName}", produces = MediaType.APPLICATION_JSON_VALUE)
     private List<? extends AbstractEntity> getAllEntities(final @PathVariable String entityClassName) throws ClassNotFoundException
     {
         final Class entityClass = Class.forName(entityClassName);
@@ -36,11 +47,15 @@ public class EntityRestController
         return (List<? extends AbstractEntity>) repository.findAll();
     }
 
-    @PostMapping(path = "/entities/{entityClassName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    private AbstractEntity addStudent(final @PathVariable String entityClassName,
-                                      final @RequestBody AbstractEntity newEntity) throws ClassNotFoundException
+    @PostMapping(path = "/entities/{entityClassName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    private AbstractEntity addEntity(final @PathVariable String entityClassName,
+                                     final @RequestBody String requestBody) throws ClassNotFoundException, IOException
     {
         final Class entityClass = Class.forName(entityClassName);
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final AbstractEntity newEntity = (AbstractEntity) objectMapper.readValue(requestBody, entityClass);
+
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);
         if (repository == null) return null;
         repository.save(newEntity);
@@ -48,8 +63,8 @@ public class EntityRestController
     }
 
     @DeleteMapping("/entities/{entityClassName}/{entityId}")
-    private void deleteStudent(final @PathVariable String entityClassName,
-                               final @PathVariable Long entityId) throws ClassNotFoundException
+    private void deleteEntity(final @PathVariable String entityClassName,
+                              final @PathVariable Long entityId) throws ClassNotFoundException
     {
         final Class entityClass = Class.forName(entityClassName);
         final CrudRepository repository = modelAnalyzer.getRepositoryByEntityClass(entityClass);

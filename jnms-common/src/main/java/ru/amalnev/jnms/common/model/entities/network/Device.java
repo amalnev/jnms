@@ -1,5 +1,6 @@
 package ru.amalnev.jnms.common.model.entities.network;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
@@ -28,6 +29,7 @@ public class Device extends NamedEntity
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "Device type", orderOfAppearance = 3)
     private DeviceType type;
 
@@ -38,6 +40,7 @@ public class Device extends NamedEntity
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "Vendor", orderOfAppearance = 4)
     private Vendor vendor;
 
@@ -48,6 +51,7 @@ public class Device extends NamedEntity
     @Getter
     @Setter
     @ManyToOne
+    //@JsonManagedReference
     @DisplayName(value = "Installation site", orderOfAppearance = 5)
     private Site site;
 

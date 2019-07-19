@@ -51,11 +51,6 @@
 											th:text="${workGroup}"
 											th:value="${workGroup.getId()}">
 									</option>
-									<!--<option th:each="workGroup : ${@modelAnalyzer.getRepositoryByEntityClass(user.getClass().getDeclaredField('workGroup').getType()).findAll()}"
-											th:selected="${user.getWorkGroup() != null && user.getWorkGroup().getId().equals(workGroup.getId())}"
-											th:text="${workGroup}"
-											th:value="${workGroup.getId()}">
-									</option>-->
 								</select>
 							</td>
 						</tr>
@@ -66,7 +61,7 @@
 					</tbody>
 				</table>
 				<br>
-				<button type="submit" name="action" value="Save">Save</button>
+				<button type="button" name="action" value="Save" id="saveButton">Save</button>
 				<button type="submit" name="action" value="Cancel">Cancel</button>
 			</form>
 		</div>
