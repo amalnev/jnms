@@ -50,7 +50,7 @@ public class IcmpProbe implements IProbe
         if( Math.random() > 0.95)
             lastState = !lastState;
 
-        icmpEvent.setOutcome(lastState);
+        icmpEvent.setOutcome(lastState ? 1 : 0);
         probeEvent.setNetworkEvent(icmpEvent);
         probeEventPublisher.publishEvent(probeEvent);
     }

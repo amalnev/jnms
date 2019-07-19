@@ -23,6 +23,7 @@ import java.util.Set;
  */
 @Entity
 @NoArgsConstructor
+@Table(name = "system_user")
 @MinPrivilege(15)
 public class User extends AbstractEntity implements UserDetails
 {

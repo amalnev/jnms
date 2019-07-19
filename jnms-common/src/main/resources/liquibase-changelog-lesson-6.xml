@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="amalnev (generated)" id="1561373236882-190">
+        <renameTable newTableName="system_user" oldTableName="User"/>
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-191">
+        <renameTable oldTableName="Device" newTableName="device" />
+        <renameTable oldTableName="DeviceType" newTableName="device_type" />
+        <renameTable oldTableName="IcmpEvent" newTableName="icmp_event" />
+        <renameTable oldTableName="Site" newTableName="site" />
+        <renameTable oldTableName="Vendor" newTableName="vendor" />
+        <renameTable oldTableName="Authority" newTableName="authority" />
+        <renameTable oldTableName="UserRole" newTableName="user_role" />
+        <renameTable oldTableName="Client" newTableName="client" />
+        <renameTable oldTableName="ProblemDetails" newTableName="problem_details" />
+        <renameTable oldTableName="TroubleTicket" newTableName="trouble_ticket" />
+        <renameTable oldTableName="WorkGroup" newTableName="work_group" />
+
+        <renameColumn tableName="system_user" oldColumnName="workGroup_id" newColumnName="work_group_id" />
+        <renameColumn tableName="device" oldColumnName="serialNumber" newColumnName="serial_number" />
+        <renameColumn tableName="device" oldColumnName="oamIp" newColumnName="oam_ip" />
+        <renameColumn tableName="authority" oldColumnName="userRole_id" newColumnName="user_role_id" />
+        <renameColumn tableName="user_role" oldColumnName="privilegeLevel" newColumnName="privilege_level" />
+        <renameColumn tableName="client" oldColumnName="contactPerson" newColumnName="contact_person" />
+        <renameColumn tableName="client" oldColumnName="contractNumber" newColumnName="contract_number" />
+        <renameColumn tableName="problem_details" oldColumnName="cpeDevice" newColumnName="cpe_device" />
+        <renameColumn tableName="problem_details" oldColumnName="serviceDescription" newColumnName="service_description" />
+        <renameColumn tableName="problem_details" oldColumnName="layer1ConnectionStatus" newColumnName="layer1_connection_status" />
+        <renameColumn tableName="problem_details" oldColumnName="layer2ConnectionStatus" newColumnName="layer2_connection_status" />
+        <renameColumn tableName="problem_details" oldColumnName="layer3ConnectionStatus" newColumnName="layer3_connection_status" />
+        <renameColumn tableName="problem_details" oldColumnName="actionsPerformed" newColumnName="actions_performed" />
+        <renameColumn tableName="trouble_ticket" oldColumnName="problemDetails_id" newColumnName="problem_details_id" />
+
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-192">
+        <delete tableName="icmp_event" />
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-193">
+        <modifyDataType tableName="icmp_event" columnName="outcome" newDataType="INT" />
+    </changeSet>
+</databaseChangeLog>

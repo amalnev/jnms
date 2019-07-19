@@ -20,8 +20,12 @@ public abstract class NetworkEvent extends AbstractEntity
     ////@JsonManagedReference
     private Device device;
 
-    @Column(columnDefinition = "TINYINT(1)")
-    private boolean outcome;
+    private int outcome;
+
+    public boolean isOutcome()
+    {
+        return (outcome != 0);
+    }
 
     @Override
     public String toString()
