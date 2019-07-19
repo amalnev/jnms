@@ -1,6 +1,5 @@
 package ru.amalnev.jnms.common.model.entities.security;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -4,14 +4,10 @@ import lombok.Setter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
-import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.common.model.entities.NotifyOnChange;
 import ru.amalnev.jnms.common.model.entities.network.NetworkEvent;
 
@@ -30,13 +26,13 @@ public class NotificationAspect
 
         //Проверим, нужно ли для этой сущности отслеживать CRUD-операции
         //Если класс сущности не аннотирован как @NotifyOnChange, то считаем что не нужно
-        if(!entity.getClass().isAnnotationPresent(NotifyOnChange.class)) return;
+        if (!entity.getClass().isAnnotationPresent(NotifyOnChange.class)) return;
 
         //Если класс сущности не совместим с NetworkEvent, то тоже не нужно
-        if(!NetworkEvent.class.isAssignableFrom(entity.getClass())) return;
+        if (!NetworkEvent.class.isAssignableFrom(entity.getClass())) return;
 
         //Посылаем сообщение в веб-сокет
         template.convertAndSend("/topic/events",
-                                new NotificationMessage(((NetworkEvent)entity).isOutcome(), entity.toString()));
+                                new NotificationMessage(((NetworkEvent) entity).isOutcome(), entity.toString()));
     }
 }

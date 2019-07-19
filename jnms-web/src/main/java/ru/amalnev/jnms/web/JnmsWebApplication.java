@@ -1,6 +1,5 @@
 package ru.amalnev.jnms.web;
 
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +20,7 @@ public class JnmsWebApplication
         {
             try
             {*/
-                SpringApplication.run(JnmsWebApplication.class, args);
+        SpringApplication.run(JnmsWebApplication.class, args);
 /*            }
             catch (BeanCreationException e)
             {

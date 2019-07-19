@@ -65,7 +65,7 @@ public class CrudAspect implements ApplicationContextAware
 
         //Проверим, нужно ли для этой сущности отслеживать CRUD-операции
         //Если класс сущности не выводится в UI (не аннотирован как @DisplayName), то считаем что не нужно
-        if(!newEntityState.getClass().isAnnotationPresent(DisplayName.class)) return;
+        if (!newEntityState.getClass().isAnnotationPresent(DisplayName.class)) return;
 
         UndoOperation undoOperation;
         if (newEntityState.getId() == null || newEntityState.getId() == -1)

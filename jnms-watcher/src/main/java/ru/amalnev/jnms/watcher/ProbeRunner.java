@@ -2,7 +2,6 @@ package ru.amalnev.jnms.watcher;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +12,9 @@ import ru.amalnev.jnms.common.model.repositories.IDeviceRepository;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ProbeRunner
@@ -36,25 +37,27 @@ public class ProbeRunner
         {
             final BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
             final String beanClassName = beanDefinition.getBeanClassName();
-            if(beanClassName == null) continue;
+            if (beanClassName == null) continue;
             final Class beanClass = Class.forName(beanClassName);
-            if(beanClass != null)
+            if (beanClass != null)
             {
-                deviceRepository.findAll().forEach(device -> {
-                    for(final Class iface : beanClass.getInterfaces())
-                    {
-                       if (iface.equals(IProbe.class))
-                       {
-                           final IProbe probe = (IProbe) applicationContext.getBean(beanClass);
-                           probe.setDevice(device);
-                           probes.add(probe);
-                           executorService.scheduleAtFixedRate(probe::run,
-                                                               0,
-                                                               probe.getPeriodMillis(),
-                                                               TimeUnit.MILLISECONDS);
-                       }
-                    }
-                });
+                deviceRepository.findAll().forEach(device ->
+                                                   {
+                                                       for (final Class iface : beanClass.getInterfaces())
+                                                       {
+                                                           if (iface.equals(IProbe.class))
+                                                           {
+                                                               final IProbe probe = (IProbe) applicationContext.getBean(
+                                                                       beanClass);
+                                                               probe.setDevice(device);
+                                                               probes.add(probe);
+                                                               executorService.scheduleAtFixedRate(probe::run,
+                                                                                                   0,
+                                                                                                   probe.getPeriodMillis(),
+                                                                                                   TimeUnit.MILLISECONDS);
+                                                           }
+                                                       }
+                                                   });
             }
         }
     }

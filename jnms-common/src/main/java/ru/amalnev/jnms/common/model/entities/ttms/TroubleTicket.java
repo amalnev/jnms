@@ -1,6 +1,5 @@
 package ru.amalnev.jnms.common.model.entities.ttms;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;

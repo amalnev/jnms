@@ -16,20 +16,20 @@
         <renameTable oldTableName="TroubleTicket" newTableName="trouble_ticket" />
         <renameTable oldTableName="WorkGroup" newTableName="work_group" />
 
-        <renameColumn tableName="system_user" oldColumnName="workGroup_id" newColumnName="work_group_id" />
-        <renameColumn tableName="device" oldColumnName="serialNumber" newColumnName="serial_number" />
-        <renameColumn tableName="device" oldColumnName="oamIp" newColumnName="oam_ip" />
-        <renameColumn tableName="authority" oldColumnName="userRole_id" newColumnName="user_role_id" />
-        <renameColumn tableName="user_role" oldColumnName="privilegeLevel" newColumnName="privilege_level" />
-        <renameColumn tableName="client" oldColumnName="contactPerson" newColumnName="contact_person" />
-        <renameColumn tableName="client" oldColumnName="contractNumber" newColumnName="contract_number" />
-        <renameColumn tableName="problem_details" oldColumnName="cpeDevice" newColumnName="cpe_device" />
-        <renameColumn tableName="problem_details" oldColumnName="serviceDescription" newColumnName="service_description" />
-        <renameColumn tableName="problem_details" oldColumnName="layer1ConnectionStatus" newColumnName="layer1_connection_status" />
-        <renameColumn tableName="problem_details" oldColumnName="layer2ConnectionStatus" newColumnName="layer2_connection_status" />
-        <renameColumn tableName="problem_details" oldColumnName="layer3ConnectionStatus" newColumnName="layer3_connection_status" />
-        <renameColumn tableName="problem_details" oldColumnName="actionsPerformed" newColumnName="actions_performed" />
-        <renameColumn tableName="trouble_ticket" oldColumnName="problemDetails_id" newColumnName="problem_details_id" />
+        <renameColumn columnDataType="BIGINT" tableName="system_user" oldColumnName="workGroup_id" newColumnName="work_group_id" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="device" oldColumnName="serialNumber" newColumnName="serial_number" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="device" oldColumnName="oamIp" newColumnName="oam_ip" />
+        <renameColumn columnDataType="BIGINT" tableName="authority" oldColumnName="userRole_id" newColumnName="user_role_id" />
+        <renameColumn columnDataType="INT" tableName="user_role" oldColumnName="privilegeLevel" newColumnName="privilege_level" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="client" oldColumnName="contactPerson" newColumnName="contact_person" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="client" oldColumnName="contractNumber" newColumnName="contract_number" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="cpeDevice" newColumnName="cpe_device" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="serviceDescription" newColumnName="service_description" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="layer1ConnectionStatus" newColumnName="layer1_connection_status" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="layer2ConnectionStatus" newColumnName="layer2_connection_status" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="layer3ConnectionStatus" newColumnName="layer3_connection_status" />
+        <renameColumn columnDataType="VARCHAR(255)" tableName="problem_details" oldColumnName="actionsPerformed" newColumnName="actions_performed" />
+        <renameColumn columnDataType="BIGINT" tableName="trouble_ticket" oldColumnName="problemDetails_id" newColumnName="problem_details_id" />
 
     </changeSet>
     <changeSet author="amalnev (generated)" id="1561373236882-192">

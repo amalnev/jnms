@@ -5,7 +5,6 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,17 +28,23 @@ public class RestTemplateFactory implements FactoryBean<RestTemplate>, Initializ
 
     private RestTemplate restTemplate;
 
-    public RestTemplate getObject() {
+    public RestTemplate getObject()
+    {
         return restTemplate;
     }
-    public Class<RestTemplate> getObjectType() {
+
+    public Class<RestTemplate> getObjectType()
+    {
         return RestTemplate.class;
     }
-    public boolean isSingleton() {
+
+    public boolean isSingleton()
+    {
         return true;
     }
 
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet()
+    {
         HttpHost host = new HttpHost(jnmsWebHost, jnmsWebPort, jnmsWebScheme);
         restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactoryBasicAuth(host));
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(jnmsWebUsername, jnmsWebPassword));
