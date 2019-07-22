@@ -18,9 +18,11 @@
     </developers>
 
     <modules>
-        <module>jnms-common</module>
+        <module>jnms-persistence</module>
         <module>jnms-web</module>
         <module>jnms-watcher</module>
+        <module>jnms-model</module>
+        <module>jnms-backup</module>
     </modules>
 
     <build>

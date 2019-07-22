@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>ru.amalnev</groupId>
-            <artifactId>jnms-common</artifactId>
+            <artifactId>jnms-persistence</artifactId>
             <version>0.0.1</version>
         </dependency>
         <dependency>

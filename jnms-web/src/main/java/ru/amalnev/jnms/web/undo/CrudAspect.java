@@ -14,7 +14,7 @@ import ru.amalnev.jnms.common.model.ModelAnalyzer;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
 
-@Aspect
+//@Aspect
 @Component
 public class CrudAspect implements ApplicationContextAware
 {
