@@ -7,7 +7,6 @@ import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.common.model.entities.MinPrivilege;
 import ru.amalnev.jnms.common.model.entities.NamedEntity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 

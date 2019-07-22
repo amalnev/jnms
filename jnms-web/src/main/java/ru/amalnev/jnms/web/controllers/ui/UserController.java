@@ -8,14 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.amalnev.jnms.common.model.entities.network.Device;
-import ru.amalnev.jnms.common.model.entities.network.Site;
 import ru.amalnev.jnms.common.model.entities.security.User;
-import ru.amalnev.jnms.common.model.repositories.IDeviceRepository;
 import ru.amalnev.jnms.common.services.SecurityService;
 import ru.amalnev.jnms.web.constants.Constants;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

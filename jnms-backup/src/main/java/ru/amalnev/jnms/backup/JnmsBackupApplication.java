@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.util.ReflectionUtils;
 import org.springframework.integration.annotation.InboundChannelAdapter;
 import org.springframework.integration.annotation.Poller;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -61,12 +59,14 @@ public class JnmsBackupApplication
     private String backupDirectory;
 
     @Bean
-    public MessageChannel jpaInputChannel() {
+    public MessageChannel jpaInputChannel()
+    {
         return new DirectChannel();
     }
 
     @Bean
-    public JpaExecutor jpaExecutor() {
+    public JpaExecutor jpaExecutor()
+    {
         JpaExecutor jpaExecutor = new JpaExecutor(this.entityManagerFactory);
         jpaExecutor.setJpaQuery("from User");
         return jpaExecutor;
@@ -75,32 +75,36 @@ public class JnmsBackupApplication
     @Bean
     @InboundChannelAdapter(channel = "jpaInputChannel",
             poller = @Poller(fixedDelay = "1000"))
-    public MessageSource<?> jpaInbound() {
+    public MessageSource<?> jpaInbound()
+    {
         return new JpaPollingChannelAdapter(jpaExecutor());
     }
 
     @Bean
     @ServiceActivator(inputChannel = "jpaInputChannel")
-    public MessageHandler handler() {
-        return message -> {
+    public MessageHandler handler()
+    {
+        return message ->
+        {
 
             List<? extends AbstractEntity> entities = (List<? extends AbstractEntity>) message.getPayload();
             List<String> lines = new ArrayList<>();
-            entities.forEach(entity -> {
-                backupMap.put(entity.getClass().getSimpleName(), System.currentTimeMillis());
+            entities.forEach(entity ->
+                             {
+                                 backupMap.put(entity.getClass().getSimpleName(), System.currentTimeMillis());
 
-                try
-                {
-                    final ObjectMapper objectMapper = new ObjectMapper();
-                    lines.add(objectMapper.writeValueAsString(entity));
-                }
-                catch (JsonProcessingException e)
-                {
-                    e.printStackTrace();
-                }
-            });
+                                 try
+                                 {
+                                     final ObjectMapper objectMapper = new ObjectMapper();
+                                     lines.add(objectMapper.writeValueAsString(entity));
+                                 }
+                                 catch (JsonProcessingException e)
+                                 {
+                                     e.printStackTrace();
+                                 }
+                             });
 
-            if(lines.size() > 0)
+            if (lines.size() > 0)
             {
                 try
                 {
@@ -127,21 +131,21 @@ public class JnmsBackupApplication
                 jpaExecutorField.setAccessible(true);
 
                 final JpaExecutor jpaExecutor = new JpaExecutor(entityManagerFactory);
-                final String nextEntity  = entitySelector.nextEntity();
+                final String nextEntity = entitySelector.nextEntity();
                 jpaExecutor.setJpaQuery("from " + nextEntity);
                 jpaExecutorField.set(jpaAdapter, jpaExecutor);
 
                 jpaExecutorField.setAccessible(false);
 
                 final Long lastBackedUp = backupMap.get(nextEntity);
-                if(lastBackedUp == null)
+                if (lastBackedUp == null)
                 {
                     backupMap.put(nextEntity, System.currentTimeMillis());
                 }
                 else
                 {
                     final Long timeSinceLastBackup = System.currentTimeMillis() - lastBackedUp;
-                    if(timeSinceLastBackup < backupInterval)
+                    if (timeSinceLastBackup < backupInterval)
                     {
                         Thread.sleep(backupInterval - timeSinceLastBackup);
                     }
