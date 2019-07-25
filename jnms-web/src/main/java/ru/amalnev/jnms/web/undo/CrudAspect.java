@@ -3,7 +3,6 @@ package ru.amalnev.jnms.web.undo;
 import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +13,7 @@ import ru.amalnev.jnms.common.model.ModelAnalyzer;
 import ru.amalnev.jnms.common.model.entities.AbstractEntity;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
 
-@Aspect
+//@Aspect
 @Component
 public class CrudAspect implements ApplicationContextAware
 {

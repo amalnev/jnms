@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySources;
 @SpringBootApplication
 @ComponentScan(basePackages = "ru.amalnev")
 @PropertySources({
-        @PropertySource("classpath:jnms.common.properties"),
+        @PropertySource("classpath:jnms.persistence.properties"),
         @PropertySource("classpath:jnms.watcher.properties")
 })
 public class JnmsWatcherApplication
