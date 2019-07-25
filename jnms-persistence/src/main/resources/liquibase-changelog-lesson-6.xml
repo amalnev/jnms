@@ -3,15 +3,21 @@
     <changeSet author="amalnev (generated)" id="1561373236882-190">
         <renameTable newTableName="system_user" oldTableName="User"/>
     </changeSet>
-    <changeSet author="amalnev (generated)" id="1561373236882-191">
+    <changeSet author="amalnev (generated)" id="1561373236882-194" failOnError="false">
         <renameTable oldTableName="Device" newTableName="device" />
-        <renameTable oldTableName="DeviceType" newTableName="device_type" />
-        <renameTable oldTableName="IcmpEvent" newTableName="icmp_event" />
         <renameTable oldTableName="Site" newTableName="site" />
         <renameTable oldTableName="Vendor" newTableName="vendor" />
         <renameTable oldTableName="Authority" newTableName="authority" />
-        <renameTable oldTableName="UserRole" newTableName="user_role" />
         <renameTable oldTableName="Client" newTableName="client" />
+    </changeSet>
+    <changeSet author="amalnev (generated)" id="1561373236882-191">
+
+        <renameTable oldTableName="DeviceType" newTableName="device_type" />
+        <renameTable oldTableName="IcmpEvent" newTableName="icmp_event" />
+
+
+        <renameTable oldTableName="UserRole" newTableName="user_role" />
+
         <renameTable oldTableName="ProblemDetails" newTableName="problem_details" />
         <renameTable oldTableName="TroubleTicket" newTableName="trouble_ticket" />
         <renameTable oldTableName="WorkGroup" newTableName="work_group" />
