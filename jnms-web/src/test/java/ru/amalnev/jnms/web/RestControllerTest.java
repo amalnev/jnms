@@ -10,16 +10,10 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
-import ru.amalnev.jnms.common.model.ModelAnalyzer;
-import ru.amalnev.jnms.common.model.entities.AbstractEntity;
-import ru.amalnev.jnms.common.model.entities.Backup;
 import ru.amalnev.jnms.common.model.entities.DisplayName;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
-import java.util.Arrays;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(locations = "classpath:test.properties")
@@ -50,7 +44,7 @@ public class RestControllerTest
     @Test
     public void testEntityRestController() throws ClassNotFoundException
     {
-        for(final EntityType<?> entityType : entityManager.getMetamodel().getEntities())
+        for (final EntityType<?> entityType : entityManager.getMetamodel().getEntities())
         {
             final Class entityClass = Class.forName(entityType.getJavaType().getCanonicalName());
             if (entityClass.isAnnotationPresent(DisplayName.class))
@@ -68,7 +62,7 @@ public class RestControllerTest
                         .withBasicAuth(jnmsWebUsername, jnmsWebPassword)
                         .getForEntity(uriBuilder.toString(), Object[].class);
 
-                for(Object entity : responseEntity.getBody())
+                for (Object entity : responseEntity.getBody())
                 {
                     System.out.println(entity);
                 }

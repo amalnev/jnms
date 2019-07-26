@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,7 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(locations = "classpath:test.properties")
@@ -44,7 +44,7 @@ public class UiControllerTest
     @WithUserDetails("root")
     public void testPages() throws Exception
     {
-        for(final EntityType<?> entityType : entityManager.getMetamodel().getEntities())
+        for (final EntityType<?> entityType : entityManager.getMetamodel().getEntities())
         {
             final Class entityClass = Class.forName(entityType.getJavaType().getCanonicalName());
             if (entityClass.isAnnotationPresent(DisplayName.class))
