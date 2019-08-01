@@ -1,0 +1,4 @@
+browser = firefox();
+open_page(browser, "https://yandex.ru");
+sleep(2000);
+close_browser(browser);

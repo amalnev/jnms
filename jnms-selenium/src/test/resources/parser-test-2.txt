@@ -1,0 +1,8 @@
+function someFunc()
+{
+    var2 = 10;
+};
+
+someFunc();
+var3 = "abc";
+
