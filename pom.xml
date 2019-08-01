@@ -23,6 +23,7 @@
         <module>jnms-watcher</module>
         <module>jnms-model</module>
         <module>jnms-backup</module>
+        <module>jnms-selenium</module>
     </modules>
 
     <build>
