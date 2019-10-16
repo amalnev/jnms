@@ -100,4 +100,10 @@ public class User extends AbstractEntity implements UserDetails
     {
         return username;
     }
+
+    public boolean isTechSupportOperator()
+    {
+        if (getWorkGroup() == null) return false;
+        return getWorkGroup().getName().equals("Support operators");
+    }
 }

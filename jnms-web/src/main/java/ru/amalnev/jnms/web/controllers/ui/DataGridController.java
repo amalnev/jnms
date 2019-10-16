@@ -14,8 +14,10 @@ import ru.amalnev.jnms.common.model.entities.DisplayName;
 import ru.amalnev.jnms.web.constants.Constants;
 
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Этот контроллер отвечает за вывод таблицы имеющихся в системе
@@ -57,10 +59,7 @@ public class DataGridController
 
         //Получаем список отображаемых полей сущности, сортируем его в соответствии со значением
         //атрибута orderOfAppearance аннотации @DisplayName
-        List<Field> displayFields = modelAnalyzer.getFields(entityClass).stream()
-                .filter(field -> field.isAnnotationPresent(DisplayName.class))
-                .sorted(Comparator.comparingInt(field -> field.getAnnotation(DisplayName.class).orderOfAppearance()))
-                .collect(Collectors.toList());
+        List<Field> displayFields = modelAnalyzer.getDisplayableFields(entityClass);
 
         //Заполняем список имен колонок
         displayFields.forEach(field -> columnNames.add(field.getAnnotation(DisplayName.class).value()));

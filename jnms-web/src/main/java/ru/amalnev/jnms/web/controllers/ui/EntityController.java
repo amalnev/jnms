@@ -143,7 +143,7 @@ public class EntityController
             try
             {
                 //Находим поле сущности по имени параметра из POST-запроса
-                final Field entityField = modelAnalyzer.getFields(entity.getClass()).stream()
+                final Field entityField = modelAnalyzer.getDisplayableFields(entity.getClass()).stream()
                         .filter(field -> field.getName().equals(fieldName))
                         .findFirst().orElse(null);
 

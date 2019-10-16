@@ -47,8 +47,7 @@ public class IcmpProbe implements IProbe
         icmpEvent.setDevice(device);
         icmpEvent.setTimestamp(System.currentTimeMillis());
 
-        if (Math.random() > 0.95)
-            lastState = !lastState;
+        lastState = device.icmpCheck();
 
         icmpEvent.setOutcome(lastState ? 1 : 0);
         probeEvent.setNetworkEvent(icmpEvent);

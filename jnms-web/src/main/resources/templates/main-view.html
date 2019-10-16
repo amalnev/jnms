@@ -1,57 +1,57 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="head-fragment :: headerFragment">
-	</head>
-	<body class="is-preload" onload="onDocumentLoaded();">
-		
-		<!-- Sidebar
-		 	 Содержит меню сайта -->
-		<div th:replace="navigation-fragment :: navigationMenu"></div>
-		
-		<!-- Main
-		     Рабочая область, в которой отображается содержимое разделов.
-		     Здесь может отображаться тот или иной фрагмент. Какой именно - определяется атрибутом viewType -->
-		<div id="main">
-			<section class="two">
-				<div class="container">
-					<!-- viewType == 'none' - не показываем ничего -->
-					<div th:if="${viewType == 'none'}"></div>
-					
-					<!-- viewType == 'grid' - показываем таблицу сущностей из соответствующего репозитория -->
-					<div th:if="${viewType == 'grid'}">
-						<div th:replace="data-grid :: grid(columnNames=${columnNames}, columnValues=${columnValues}, entityClassName=${entityClassName})">
-						</div>
-					</div>
-					
-					<!-- viewType == 'entity' - показываем форму редактирования сущности -->
-					<div th:if="${viewType == 'entity'}">
-						<div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
-						</div>
-					</div>
-					
-					<!-- viewType == 'undo' - показываем список откатываемых операций -->
-					<div th:if="${viewType == 'undo'}">
-						<div th:replace="operations-log :: operationsLog">
-						</div>
-					</div>
-					
-					<!-- viewType == 'undo' - показываем список откатываемых операций -->
-					<div th:if="${viewType == 'notifications'}">
-						<div th:replace="notifications :: notificationsLog">
-						</div>
-					</div>
-					
-					<!-- Сущности типа "Пользователь" обрабатываются особым образом - для них отдельная таблица и форма -->
-					<div th:if="${viewType == 'userGrid'}">
-						<div th:replace="user-grid :: userGrid(users=${users})">
-						</div>
-					</div>
-					<div th:if="${viewType == 'userForm'}">
-						<div th:replace="user-view :: userForm(user=${user})">
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</body>
+    <head th:include="head-fragment :: headerFragment">
+    </head>
+    <body class="is-preload" onload="onDocumentLoaded();">
+        
+        <!-- Sidebar
+              Содержит меню сайта -->
+        <div th:replace="navigation-fragment :: navigationMenu"></div>
+        
+        <!-- Main
+             Рабочая область, в которой отображается содержимое разделов.
+             Здесь может отображаться тот или иной фрагмент. Какой именно - определяется атрибутом viewType -->
+        <div id="main">
+            <section class="two">
+                <div class="container">
+                    <!-- viewType == 'none' - не показываем ничего -->
+                    <div th:if="${viewType == 'none'}"></div>
+                    
+                    <!-- viewType == 'grid' - показываем таблицу сущностей из соответствующего репозитория -->
+                    <div th:if="${viewType == 'grid'}">
+                        <div th:replace="data-grid :: grid(columnNames=${columnNames}, columnValues=${columnValues}, entityClassName=${entityClassName})">
+                        </div>
+                    </div>
+                    
+                    <!-- viewType == 'entity' - показываем форму редактирования сущности -->
+                    <div th:if="${viewType == 'entity'}">
+                        <div th:replace="entity-view :: entityForm(entity=${entity}, springContext=${springContext})">
+                        </div>
+                    </div>
+                    
+                    <!-- viewType == 'undo' - показываем список откатываемых операций -->
+                    <div th:if="${viewType == 'undo'}">
+                        <div th:replace="operations-log :: operationsLog">
+                        </div>
+                    </div>
+                    
+                    <!-- viewType == 'undo' - показываем список откатываемых операций -->
+                    <div th:if="${viewType == 'notifications'}">
+                        <div th:replace="notifications :: notificationsLog">
+                        </div>
+                    </div>
+                    
+                    <!-- Сущности типа "Пользователь" обрабатываются особым образом - для них отдельная таблица и форма -->
+                    <div th:if="${viewType == 'userGrid'}">
+                        <div th:replace="user-grid :: userGrid(users=${users})">
+                        </div>
+                    </div>
+                    <div th:if="${viewType == 'userForm'}">
+                        <div th:replace="user-view :: userForm(user=${user})">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </body>
 </html>
