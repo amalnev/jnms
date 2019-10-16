@@ -1,0 +1,28 @@
+//Функция поиска в Яндексе
+function search_with_yandex(browser, what)
+{
+    //Переходим на нужную страницу
+    open_page(browser, "https://yandex.ru");
+
+    //Находим интересующие нас элементы - текстовое поле для ввода запроса и кнопка "Искать"
+    search_field = find_element_by_id(browser, "text");
+    search_button = find_element_by_css_selector(browser, ".suggest2-form__button");
+
+    //Записываем текст запроса в поле запроса
+    send_keys(search_field, what);
+
+    //Нажимаем кнопку "Искать"
+    click(search_button);
+};
+
+//Запускаем FireFox
+browser = firefox();
+
+//Ищем в Яндексе "selenium"
+search_with_yandex(browser, "selenium");
+
+//Ждем 2 секунды
+sleep(2000);
+
+//Закрываем окно браузера
+close_browser(browser);

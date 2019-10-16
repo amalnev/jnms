@@ -27,6 +27,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>3.141.59</version>
@@ -36,10 +46,60 @@
             <artifactId>webdrivermanager</artifactId>
             <version>2.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.1-jre</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <plugins>
 
+            <!-- This is a custom build step required to generate the language parser in Java from YACC file -->
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>1.6.0</version>
+                <executions>
 
+                    <!-- Parser generation is performed in generate-sources phase by invoking BYACC/J parser generator-->
+                    <execution>
+                        <id>Generate parser with BYACC/J</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/java/ru/amalnev/selenium/language</workingDirectory>
+                            <executable>${project.basedir}/byacc/yacc</executable>
+                            <arguments>
+                                <argument>-Jpackage=ru.amalnev.selenium.language</argument>
+                                <argument>-Jthrows=ParserException,IOException</argument>
+                                <argument>-Jnorun</argument>
+                                <argument>${project.basedir}/src/main/yacc/selenium.y</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generated sources containing language parser implementation are cleaned up during clean phase -->
+                    <execution>
+                        <id>Delete parser sources</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/java/ru/amalnev/selenium/language</workingDirectory>
+                            <executable>rm</executable>
+                            <arguments>
+                                <argument>Parser.java</argument>
+                                <argument>ParserVal.java</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
