@@ -9,6 +9,7 @@ import ru.amalnev.jnms.common.model.entities.NamedEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  * Сущность "сетевое устройство". CRUD-операции разрешены с правами 3 и выше.
@@ -73,4 +74,15 @@ public class Device extends NamedEntity
     @Setter
     @DisplayName(value = "OAM IP address", orderOfAppearance = 7)
     private String oamIp;
+
+    @Transient
+    private boolean lastState;
+
+    public boolean icmpCheck()
+    {
+        if (Math.random() > 0.95)
+            lastState = !lastState;
+
+        return lastState;
+    }
 }

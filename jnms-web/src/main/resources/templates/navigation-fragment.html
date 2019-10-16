@@ -41,7 +41,7 @@
 							
 							<!-- Если текущий пользователь является оператором техподдержки, то дадим ему
 								 возможность открывать тикеты -->
-							<li th:if="${@securityService.isTechSupportOperator(@securityService.getCurrentUser())}">
+                            <li th:if="${@securityService.getCurrentUser().isTechSupportOperator()}">
 								<a th:href="@{/ttregister}">
 									<span class="icon solid fa-th">Start a trouble ticket</span>
 								</a>
